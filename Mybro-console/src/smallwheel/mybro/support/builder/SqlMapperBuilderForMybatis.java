@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.jdom.Attribute;
 import org.jdom.Comment;
 import org.jdom.DocType;
@@ -22,6 +23,8 @@ import smallwheel.mybro.common.Constants;
  *
  */
 public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
+	
+	private final static Logger LOGGER = Logger.getLogger(SqlMapperBuilderForMybatis.class);
 	
 	/** 
 	 * SqlMap.xml 파일을 만든다. 
@@ -167,9 +170,9 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 			fos.close();
 			
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 

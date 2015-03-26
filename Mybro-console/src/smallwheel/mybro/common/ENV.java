@@ -32,6 +32,8 @@ public class ENV {
 	public static String dbms;
 	/** 데이터베이스 아이피 */
 	public static String serverIp;
+	/** 데이터베이스 포트 */
+	public static String port;
 	/** 데이터베이스 아이디 */
 	public static String userId;
 	/** 데이터베이스 패스워드 */
@@ -48,6 +50,8 @@ public class ENV {
 			dbms = ContextMaster.getString("DBMS");
 		if (checkNull("SERVER_IP"))
 			serverIp = ContextMaster.getString("SERVER_IP");
+		if (checkNull("PORT"))
+			port = ContextMaster.getString("PORT");
 		if (checkNull("USER_ID"))
 			userId = ContextMaster.getString("USER_ID");
 		if (checkNull("USER_PASS"))

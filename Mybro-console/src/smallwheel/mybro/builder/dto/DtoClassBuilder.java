@@ -116,7 +116,7 @@ public class DtoClassBuilder {
 			writer.close();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 	
@@ -184,7 +184,7 @@ public class DtoClassBuilder {
 			writer.close();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 

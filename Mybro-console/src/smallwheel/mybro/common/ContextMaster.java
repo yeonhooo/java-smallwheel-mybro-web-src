@@ -14,15 +14,16 @@ import org.apache.log4j.Logger;
  * @author yeonhooo
  *
  */
-public class ContextMaster {
+public final class ContextMaster {
+	
 	private final static Logger LOGGER = Logger.getLogger(ContextMaster.class);
-	public static String filename;
-	static ResourceBundle resources;
+	private static ResourceBundle resources;
 
-	public static void setFilename(String filename) {
-		ContextMaster.filename = filename;
-	}
-
+	/**
+	 * Don't let anyone instantiate this class.
+	 */
+	private ContextMaster() { };
+	
 	public static String getString(String name) {
 		try {
 			// resources = ResourceBundle.getBundle("conf.environment" + filename, Locale.getDefault());
@@ -38,7 +39,7 @@ public class ContextMaster {
 
 	public static void reload() {
 		try {
-			resources = ResourceBundle.getBundle("conf.environment" + filename, Locale.getDefault());
+			resources = ResourceBundle.getBundle(".\\environment.properties", Locale.getDefault());
 		} catch (MissingResourceException mre) {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug(" ContextMaster reload() ", mre);

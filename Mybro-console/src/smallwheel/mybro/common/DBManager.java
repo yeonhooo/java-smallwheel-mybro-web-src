@@ -25,18 +25,18 @@ public class DBManager {
 		LOGGER.info("MSG] " + dbms + " connect");
 
 		if (dbms.equalsIgnoreCase("MSSQL")) {
-			setConnectionMSSQL(ENV.serverIp, ENV.userId, ENV.userPass, ENV.dbName);
+			setConnectionMSSQL(ENV.serverIp, ENV.port, ENV.userId, ENV.userPass, ENV.dbName);
 		} else if (dbms.equalsIgnoreCase("MYSQL")) {
-			setConnectionMYSQL(ENV.serverIp, ENV.userId, ENV.userPass, ENV.dbName);
+			setConnectionMYSQL(ENV.serverIp, ENV.port, ENV.userId, ENV.userPass, ENV.dbName);
 		} else if (dbms.equalsIgnoreCase("ORACLE")) {
-			setConnectionOracle(ENV.serverIp, ENV.userId, ENV.userPass, ENV.dbName);
+			setConnectionOracle(ENV.serverIp, ENV.port, ENV.userId, ENV.userPass, ENV.dbName);
 		}
 	}
 
 	/**
 	 * 연결이 끊어진 곳이 있는지 확인한다.
 	 * @param ip 데이터베이스 IP
-	 * @param id 아디
+	 * @param id 아이디
 	 * @param pw 비번
 	 * @param dbname 데이터베이스명
 	 */
@@ -64,7 +64,7 @@ public class DBManager {
 		try {
 			st = con_mssql.createStatement();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		} finally {
 			return st;
 		}
@@ -77,22 +77,23 @@ public class DBManager {
 	/** 
 	 * MS-SQL 연결
 	 * @param ip 데이터베이스 IP
-	 * @param id 아디
+	 * @param port 데이터베이스 포트
+	 * @param id 아이디
 	 * @param pw 비번
 	 * @param dbname 데이터베이스명
 	 */
-	public void setConnectionMSSQL(String ip, String id, String pw,String dbname) {
+	public void setConnectionMSSQL(String ip, String  port, String id, String pw,String dbname) {
 		try {
 			OKMSSQL = false;
 			destroyConnection(con_mssql);
 			String drivername = "com.microsoft.jdbc.sqlserver.SQLServerDriver";
 			Class.forName(drivername);
-			String url = "jdbc:microsoft:sqlserver://" + ip + ":1433;DatabaseName=" + dbname;
+			String url = "jdbc:microsoft:sqlserver://" + ip + ":" + port + ";DatabaseName=" + dbname;
 			LOGGER.info(url);
 			con_mssql = DriverManager.getConnection(url, id, pw);
 			OKMSSQL = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 			OKMSSQL = false;
 			destroyConnection(con_mssql);
 		}
@@ -101,23 +102,24 @@ public class DBManager {
 	/** 
 	 * MYSQL 연결
 	 * @param ip 데이터베이스 IP
-	 * @param id 아디
+	 * @param port 데이터베이스 포트
+	 * @param id 아이디
 	 * @param pw 비번
 	 * @param dbname 데이터베이스명
 	 */
-	public void setConnectionMYSQL(String ip, String id, String pw, String dbname) {
+	public void setConnectionMYSQL(String ip, String  port, String id, String pw, String dbname) {
 		try {
 			OKMYSQL = false;
 			destroyConnection(con_mysql);
 
 			String drivername = "com.mysql.jdbc.Driver";
 			Class.forName(drivername);
-			String url = "jdbc:mysql://" + ip + "/" + dbname;
-			LOGGER.info("[mysql 연결] " + ip + " DB Connectionn 시도 id:" + id + " pass:" + pw);
+			String url = "jdbc:mysql://" + ip + ":" + port + "/" + dbname;
+			LOGGER.info("[mysql 연결] " + ip + ":" + port + " DB Connectionn 시도 id:" + id + " pass:" + pw);
 			con_mysql = DriverManager.getConnection(url, id, pw);
 			OKMYSQL = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 			OKMYSQL = false;
 			destroyConnection(con_mysql);
 		}
@@ -126,22 +128,23 @@ public class DBManager {
     /** 
 	 * ORACLE 연결
 	 * @param ip 데이터베이스 IP
-	 * @param id 아디
+	 * @param port 데이터베이스 포트
+	 * @param id 아이디
 	 * @param pw 비번
 	 * @param dbname 데이터베이스명
 	 */
-	public void setConnectionOracle(String ip, String id, String pw, String dbname) {
+	public void setConnectionOracle(String ip, String  port, String id, String pw, String dbname) {
 		try {
 			OKORACLE = false;
 			destroyConnection(con_oracle);
 			String drivername = "oracle.jdbc.OracleDriver";
 			Class.forName(drivername);
-			String url = "jdbc:oracle:thin:@" + ip + ":1521:" + dbname;
+			String url = "jdbc:oracle:thin:@" + ip + ":" + port + ":" + dbname;
 			LOGGER.info("[DB연결] " + ip + " DB Connectionn 시도 id:" + id + " pass:" + pw);
 			con_oracle = DriverManager.getConnection(url, id, pw);
 			OKORACLE = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 			OKORACLE = false;
 			destroyConnection(con_oracle);
 		}
@@ -158,7 +161,7 @@ public class DBManager {
 				st = con_mssql.createStatement();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		} finally {
 			return st;
 		}

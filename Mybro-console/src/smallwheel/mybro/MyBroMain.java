@@ -55,14 +55,19 @@ public class MyBroMain {
 		init();
 		
 		// DAO 클래스와 SqlMap.xml 파일을 만들려는 테이블 목록
-		final String[] TABLE_LIST = { 
-				"city"
-				, "country"
+		final String[] TABLE_LIST = {
+//				"TBL_MENU_MGMT"
+				"TBL_USER_MGMT"
+				, "TBL_AUTH_DIV_MGMT"
+				, "TBL_AUTH_MENU_MGMT"
+				, "TBL_CODE_MGMT"
+//				"city"
+//				, "country"
 		};
 
 		final String[] PROCEDURE_LIST = {
-		// "EXEC [PROC_BB_KBO_APP_SDMS_MOBILE_VOTE_CNT_S]"
-		// "PROC_BB_KBO_XMLMAKER_STATS_LIVEPLAYER_BATTER_S '2010', '20100504HHHT0'"
+		// "EXEC PROC_TEST01"
+		// "PROC_TEST02 '2010', '20100504HHHT0'"
 		};
 
 		// 테이블에 대한 클래스 파일과 XML 파일 생성
