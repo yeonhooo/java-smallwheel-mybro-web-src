@@ -27,7 +27,6 @@ public class ENV {
 	 * </pre>
 	 */
 	public static String prefixExcept;
-	
 	/** 데이터베이스 종류 */
 	public static String dbms;
 	/** 데이터베이스 아이피 */
@@ -39,7 +38,19 @@ public class ENV {
 	/** 데이터베이스 패스워드 */
 	public static String userPass;
 	/** 데이터베이스명 */
-	public static String dbName; 
+	public static String dbName;
+	/** 테이블명 리스트 */
+	public static String tableNameList; 
+	/** 
+	 * 자파 클래스 파일명 접미어
+	 * <pre>
+	 * e.g. 테이블명이 USER_INFO 인 경우, 기본 자바파일명은 UserInfo.java가 된다.
+	 * 이 때 classNameSuffix를 "Dto"로 설정할 경우 자바파일명은 UserInfoDto.java가 되며,
+	 * classNameSuffix를 "Vo"로 설정할 경우 자바파일명은 UserInfoVo.java가 된다.
+	 * </pre>
+	 */
+	public static String classNameSuffix = "Dto";
+
 
 	/** 변수 생성 후, 프로퍼티 파일로부터 속성을 읽어 값을 변수에 저장한다(데이터베이스 관련). */
 	public static void init() {
@@ -58,10 +69,14 @@ public class ENV {
 			userPass = ContextMaster.getString("USER_PASS");
 		if (checkNull("DB_NAME"))
 			dbName = ContextMaster.getString("DB_NAME");
+		if (checkNull("TABLES"))
+			tableNameList = ContextMaster.getString("TABLES");
 		if (checkNull("MAPPER_TYPE"))
 			mapperType = ContextMaster.getString("MAPPER_TYPE");
 		if (checkNull("PREFIX_EXCEPT"))
 			prefixExcept = ContextMaster.getString("PREFIX_EXCEPT");
+		if (checkNull("CLASS_NAME_SUFFIX"))
+			classNameSuffix = ContextMaster.getString("CLASS_NAME_SUFFIX");
 
 		File dir = new File(Constants.Path.DTO_CLASS_DES_DIR);
 		if (!dir.isDirectory()) {
@@ -82,6 +97,7 @@ public class ENV {
 			LOGGER.info("#\tCoupling type:\t" + couplingType);
 			LOGGER.info("#\tMapper type:\t" + mapperType);
 			LOGGER.info("#\tExclude prefix string from entity name:\t" + prefixExcept);
+			LOGGER.info("#\tJava class name suffix: \t" + classNameSuffix);
 			LOGGER.info("##############################################################\n");
 		}
 	}

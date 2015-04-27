@@ -85,6 +85,8 @@ public class Constants {
 		
 		/** sqlmap 파일 위치 */
 		public static final String SQL_MAPPER_DES_DIR = "export/mapper/";
+		public static final String FILENAME_EXTENSION_JAVA = ".java";
+		public static final String FILENAME_EXTENSION_XML = ".xml";
 	}
 
 }

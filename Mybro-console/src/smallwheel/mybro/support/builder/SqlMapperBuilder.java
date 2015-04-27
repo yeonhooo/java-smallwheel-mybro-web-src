@@ -11,7 +11,7 @@ import org.jdom.Document;
  * @author yeonhooo
  *
  */
-public abstract class SqlMapperBuilder {
+public abstract class SqlMapperBuilder implements Builder {
 
 	protected Document doc;
 	protected DocType docType;
@@ -19,6 +19,4 @@ public abstract class SqlMapperBuilder {
 	protected String publicID;
 	protected String systemID;
 	
-	public abstract void writeSqlMap(String tableName);
-
 }

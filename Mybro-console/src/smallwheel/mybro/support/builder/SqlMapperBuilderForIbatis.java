@@ -12,15 +12,13 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import smallwheel.mybro.builder.dto.DtoClassBuilder;
 import smallwheel.mybro.common.Constants;
 
 /**
  * 
  * Ibatis용 SqlMapperBuilder 클래스
  * 
- * @author yeonhooo
- *
+ * @author yeonhooo@gmail.com
  */
 public class SqlMapperBuilderForIbatis extends SqlMapperBuilder {
 	
@@ -31,7 +29,7 @@ public class SqlMapperBuilderForIbatis extends SqlMapperBuilder {
 	 * @param table list 
 	 * */
 	@Override
-	public void writeSqlMap(String tableName) {
+	public void build() {
 		final Element root = new Element("sqlMap");
 		final Element typeAlias = new Element("typeAlias");
 		final Element resultMap = new Element("resultMap");
