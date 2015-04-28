@@ -17,7 +17,9 @@ import org.jdom.output.XMLOutputter;
 import smallwheel.mybro.common.ClassFileInfo;
 import smallwheel.mybro.common.ColumnInfo;
 import smallwheel.mybro.common.Constants;
+import smallwheel.mybro.common.MapperInterfaceInfo;
 import smallwheel.mybro.common.PropertyInfo;
+import smallwheel.mybro.common.SqlMapInfo;
 import smallwheel.mybro.common.TableInfo;
 import smallwheel.mybro.common.SharedInfo;
 
@@ -29,7 +31,7 @@ import smallwheel.mybro.common.SharedInfo;
 public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 	
 	private final static Logger LOGGER = Logger.getLogger(SqlMapperBuilderForMybatis.class);
-	private final SharedInfo tableInfo = SharedInfo.getInstance();
+	private final SharedInfo sharedInfo = SharedInfo.getInstance();
 	
 	/** 
 	 * SqlMap.xml 颇老阑 父电促. 
@@ -40,14 +42,19 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 		
 		TableInfo table;
 		ClassFileInfo classFile;
+		MapperInterfaceInfo mapperInterfaceFile; 
 		
-		for (int i = 0; i < tableInfo.getTableInfoList().size(); i++) {
+		List<MapperInterfaceInfo> mapperInterfaceInfoList = sharedInfo.getMapperInterfaceInfoList();
+		
+		for (int i = 0; i < sharedInfo.getTableInfoList().size(); i++) {
 			
-			table = tableInfo.getTableInfoList().get(i);
-			classFile = tableInfo.getClassFileInfoList().get(i);
+			table = sharedInfo.getTableInfoList().get(i);
+			classFile = sharedInfo.getClassFileInfoList().get(i);
+			mapperInterfaceFile = new MapperInterfaceInfo();
 			
 			String tableName = table.getName();
 			String entityName = table.getEntityName();
+			mapperInterfaceFile.setName(classFile.getName() + Constants.Mapper.MAPPER_INTERFACE_SUFFIX);
 			
 			final Element root = new Element("mapper");
 			final Element typeAlias = new Element("typeAlias");
@@ -58,6 +65,7 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 			final Element selectOne = new Element("select");
 			final Element update = new Element("update");
 			final Element delete = new Element("delete");
+			String sqlMapId;
 			
 			// root 畴靛 汲沥
 			root.setAttribute(makeAttribute("namespace", table.getEntityName()));
@@ -88,12 +96,16 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 			sql.addContent(makeDynamicWhere(table.getColumnInfoList(), classFile.getPropertyList()));
 			
 			// insert sql map 积己
-			insert.setAttribute(makeAttribute("id", "insert" + entityName));
+			sqlMapId = "insert" + entityName;
+			mapperInterfaceFile.getSqlMapInfoList().add(new SqlMapInfo(sqlMapId, "int"));
+			insert.setAttribute(makeAttribute("id", sqlMapId));
 			insert.setAttribute(makeAttribute("parameterType", typeAliasText));
 			insert.addContent(makeInsertSqlMap(table, classFile));
 			
 			// select list sql map 积己
-			select.setAttribute(makeAttribute("id", "select" + entityName + "List"));
+			sqlMapId = "select" + entityName + "List";
+			mapperInterfaceFile.getSqlMapInfoList().add(new SqlMapInfo(sqlMapId, "List<" + classFile.getName() + ">"));
+			select.setAttribute(makeAttribute("id", sqlMapId));
 			select.setAttribute(makeAttribute("parameterType", typeAliasText));
 			select.setAttribute(makeAttribute("resultType", typeAliasText));
 			select.addContent(makeSelectSqlMap(table, classFile));
@@ -101,21 +113,27 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 			select.addContent(addDynamicWhere(tableName));
 			
 			// select sql map 积己
-			selectOne.setAttribute(makeAttribute("id", "select" + entityName));
+			sqlMapId = "select" + entityName;
+			mapperInterfaceFile.getSqlMapInfoList().add(new SqlMapInfo(sqlMapId, classFile.getName()));
+			selectOne.setAttribute(makeAttribute("id", sqlMapId));
 			selectOne.setAttribute(makeAttribute("parameterType", typeAliasText));
 			selectOne.setAttribute(makeAttribute("resultType", typeAliasText));
 			selectOne.addContent(makeSelectSqlMap(table, classFile));
 			selectOne.addContent(makePrimaryKeyWhere(table.getPrimaryKeyColumnNameList(), classFile.getPropertyPrimaryKeyNameList()));
 			
 			// update sql map 积己
-			update.setAttribute(makeAttribute("id", "update" + entityName));
+			sqlMapId = "update" + entityName;
+			mapperInterfaceFile.getSqlMapInfoList().add(new SqlMapInfo(sqlMapId, "int"));
+			update.setAttribute(makeAttribute("id", sqlMapId));
 			update.setAttribute(makeAttribute("parameterType", typeAliasText));
 			update.addContent(makeUpdateSqlMapHead(tableName));
 			update.addContent(makeDynamicUpdateSqlMap(table, classFile));
 			update.addContent(makePrimaryKeyWhere(table.getPrimaryKeyColumnNameList(), classFile.getPropertyPrimaryKeyNameList()));
 			
 			// delete sql map 积己
-			delete.setAttribute(makeAttribute("id", "delete" + entityName));
+			sqlMapId = "delete" + entityName;
+			mapperInterfaceFile.getSqlMapInfoList().add(new SqlMapInfo(sqlMapId, "int"));
+			delete.setAttribute(makeAttribute("id", sqlMapId));
 			delete.setAttribute(makeAttribute("parameterType", typeAliasText));
 			delete.addContent(makeDeleteSqlMap(tableName));
 			delete.addContent(makePrimaryKeyWhere(table.getPrimaryKeyColumnNameList(), classFile.getPropertyPrimaryKeyNameList()));
@@ -191,6 +209,8 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 			} catch (IOException e) {
 				LOGGER.error(e.getMessage(), e);
 			}
+			
+			mapperInterfaceInfoList.add(mapperInterfaceFile);
 		
 		}
 	}

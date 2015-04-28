@@ -5,6 +5,7 @@ import smallwheel.mybro.common.ENV;
 import smallwheel.mybro.common.SharedInfo;
 import smallwheel.mybro.support.SqlMapperBuilderFactory;
 import smallwheel.mybro.support.builder.DtoClassBuilder;
+import smallwheel.mybro.support.builder.MapperInterfaceBuilder;
 import smallwheel.mybro.support.builder.SqlMapperBuilder;
 
 /**
@@ -22,6 +23,7 @@ public class MyBroMain {
 	
 	private DtoClassBuilder dtoClassBuilder;
 	private SqlMapperBuilder sqlMapperBuilder;
+	private MapperInterfaceBuilder mapperInterfaceBuilder;
 
 	public static void main(String[] args) {
 		MyBroMain main = new MyBroMain();
@@ -38,6 +40,9 @@ public class MyBroMain {
 		// 타입별(ibatis, mybatis) sqlMapperBuilder 생성
 		SqlMapperBuilderFactory factory = new SqlMapperBuilderFactory();
 		sqlMapperBuilder = factory.createSqlMapperBuilder(ENV.mapperType);
+		
+		// mapperInterfaceBuilder 생성
+		mapperInterfaceBuilder = new MapperInterfaceBuilder();
 	}
 
 	private void run() {
@@ -50,6 +55,9 @@ public class MyBroMain {
 		
 		// step2. SqlMap.xml 파일을 생성한다.
 		sqlMapperBuilder.build();
+		
+		// step3. mapper interface 파일을 생성한다.
+		mapperInterfaceBuilder.build();
 		
 		LOGGER.info("### " + SharedInfo.getInstance().getTableInfoList().size() + "개 테이블에 대한 작업이 완료되었습니다." );
 	}

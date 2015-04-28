@@ -86,9 +86,11 @@ public class DBManager {
 		try {
 			OKMSSQL = false;
 			destroyConnection(con_mssql);
-			String drivername = "com.microsoft.jdbc.sqlserver.SQLServerDriver";
+//			String drivername = "com.microsoft.jdbc.sqlserver.SQLServerDriver";
+			String drivername = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 			Class.forName(drivername);
-			String url = "jdbc:microsoft:sqlserver://" + ip + ":" + port + ";DatabaseName=" + dbname;
+//			String url = "jdbc:microsoft:sqlserver://" + ip + ":" + port + ";DatabaseName=" + dbname;
+			String url = "jdbc:sqlserver://" + ip + ":" + port + ";databaseName=" + dbname;
 			LOGGER.info(url);
 			con_mssql = DriverManager.getConnection(url, id, pw);
 			OKMSSQL = true;

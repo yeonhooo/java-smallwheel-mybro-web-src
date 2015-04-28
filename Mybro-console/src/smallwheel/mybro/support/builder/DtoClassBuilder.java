@@ -19,9 +19,6 @@ public class DtoClassBuilder implements Builder {
 	private final SharedInfo tableInfo = SharedInfo.getInstance();
 	
 	/**
-	 * @param index 
-	 * @param con 
-	 * @param TABLE_LIST
 	 */
 	@Override
 	public void build() {

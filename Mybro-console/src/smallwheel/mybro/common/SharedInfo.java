@@ -28,8 +28,7 @@ public class SharedInfo {
 	private static SharedInfo sharedInfo = new SharedInfo();
 	private List<TableInfo> tableInfoList = new ArrayList<>();
 	private List<ClassFileInfo> classFileInfoList = new ArrayList<>();
-	private List<String> sqlMapIdList = new ArrayList<String>();
-	private List<String> sqlMapReturnTypeList = new ArrayList<String>();
+	private List<MapperInterfaceInfo> mapperInterfaceInfoList = new ArrayList<>();
 	
 	// 테이블 정보 관련 변수
 	private final String tables = ContextMaster.getString("TABLES");
@@ -256,17 +255,8 @@ public class SharedInfo {
 	public List<ClassFileInfo> getClassFileInfoList() {
 		return classFileInfoList;
 	}
-	public List<String> getSqlMapIdList() {
-		return sqlMapIdList;
-	}
-	public void setSqlMapIdList(List<String> sqlMapIdList) {
-		this.sqlMapIdList = sqlMapIdList;
-	}
-	public List<String> getSqlMapReturnTypeList() {
-		return sqlMapReturnTypeList;
-	}
-	public void setSqlMapReturnTypeList(List<String> sqlMapReturnTypeList) {
-		this.sqlMapReturnTypeList = sqlMapReturnTypeList;
+	public List<MapperInterfaceInfo> getMapperInterfaceInfoList() {
+		return mapperInterfaceInfoList;
 	}
 	
 }

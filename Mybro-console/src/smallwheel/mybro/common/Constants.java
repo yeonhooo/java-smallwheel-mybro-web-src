@@ -73,6 +73,9 @@ public class Constants {
 		 * </pre>
 		 */
 		public static final String MYBATIS_SYSTEM_ID = "http://mybatis.org/dtd/mybatis-3-mapper.dtd";
+		
+		/** Suffix for mybatis mapper interface name  */
+		public static final String MAPPER_INTERFACE_SUFFIX = "Mapper"; 
 	}
 
 	public static class Path {

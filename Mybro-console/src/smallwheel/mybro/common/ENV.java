@@ -49,7 +49,7 @@ public class ENV {
 	 * classNameSuffix를 "Vo"로 설정할 경우 자바파일명은 UserInfoVo.java가 된다.
 	 * </pre>
 	 */
-	public static String classNameSuffix = "Dto";
+	public static String classNameSuffix;
 
 
 	/** 변수 생성 후, 프로퍼티 파일로부터 속성을 읽어 값을 변수에 저장한다(데이터베이스 관련). */
