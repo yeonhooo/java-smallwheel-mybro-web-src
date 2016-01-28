@@ -355,8 +355,14 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 		dynamic.setAttribute(makeAttribute("prefixOverrides", ","));
 		
 		Element ifTest = null;
-
-		for (int i = 0; i < classFile.getPropertyList().size(); i++) {
+		
+		PropertyListLoop: for (int i = 0; i < classFile.getPropertyList().size(); i++) {
+			
+			for (String pkPropertyName : classFile.getPropertyPrimaryKeyNameList()) {
+				if (pkPropertyName.equals(classFile.getPropertyList().get(i).getName())) {
+					continue PropertyListLoop;
+				}
+			}
 			
 			if ("INT".equals(table.getColumnInfoList().get(i).getType().toUpperCase())) {
 				ifTest = new Element("if");
