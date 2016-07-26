@@ -42,8 +42,7 @@ public class MapperInterfaceBuilder implements Builder {
 	
 				// method ¿€º∫
 				for (int j = 0; j < mapperInterfaceFile.getSqlMapInfoList().size(); j++) {
-					writer.write("\n\t" + "public " 
-							+ mapperInterfaceFile.getSqlMapInfoList().get(j).getType()
+					writer.write("\n\t" + mapperInterfaceFile.getSqlMapInfoList().get(j).getType()
 							+ " " + mapperInterfaceFile.getSqlMapInfoList().get(j).getId() 
 							+ "(" + classFile.getName() + " " + convertParameterName(classFile.getName()) + ");\n");
 				}
