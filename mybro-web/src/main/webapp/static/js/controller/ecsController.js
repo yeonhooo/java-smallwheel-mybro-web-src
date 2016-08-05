@@ -18,7 +18,8 @@ App.controller('EcsController', [ '$scope', 'EcsService',
 				mapperType : '',
 				couplingType : '',
 				prefixExcept : '',
-				classNameSuffix : ''
+				classNameSuffix : '',
+				dtoStyle : ''
 			};
 
 			self.connect = function(connectionInfo) {

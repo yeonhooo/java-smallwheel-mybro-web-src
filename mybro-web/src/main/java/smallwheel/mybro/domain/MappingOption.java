@@ -25,6 +25,8 @@ public class MappingOption {
 	 * </pre>
 	 */
 	private String classNameSuffix;
+	
+	private String dtoStyle;
 
 	public String getCouplingType() {
 		return couplingType;
@@ -56,5 +58,13 @@ public class MappingOption {
 
 	public void setClassNameSuffix(String classNameSuffix) {
 		this.classNameSuffix = classNameSuffix;
+	}
+	
+	public String getDtoStyle() {
+		return dtoStyle;
+	}
+
+	public void setDtoStyle(String dtoStyle) {
+		this.dtoStyle = dtoStyle;
 	}
 }

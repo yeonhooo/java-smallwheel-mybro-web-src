@@ -6,7 +6,6 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import smallwheel.mybro.common.Constants;
 import smallwheel.mybro.common.Constants.Delimiter;
 import smallwheel.mybro.common.Constants.Path;
 import smallwheel.mybro.domain.ClassFileInfo;

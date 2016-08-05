@@ -1,26 +1,26 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
 	<title>mybro</title>
 	<style>
-		.username.ng-valid {
-			background-color: lightgreen;
-		}
-		
-		.username.ng-dirty.ng-invalid-required {
-			background-color: red;
-		}
-		
-		.username.ng-dirty.ng-invalid-minlength {
-			background-color: yellow;
+		.username.ng-valid { background-color: lightgreen; }
+		.username.ng-dirty.ng-invalid-required { background-color: red; }
+		.username.ng-dirty.ng-invalid-minlength { background-color: yellow; }
+		div.tooltip-inner {
+		    max-width: 350px;
+		    /* If max-width does not work, try using width instead */
+		    width: 350px;
+		    text-align: left;
 		}
 	</style>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<link href="/static/css/app.css" rel="stylesheet"></link>
+	<link rel="stylesheet" href="/static/css/app.css"></link>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
 	<script src="/static/js/app.js"></script>
 	<script src="<c:url value='/static/js/service/ecsService.js' />"></script>
 	<script src="<c:url value='/static/js/controller/ecsController.js' />"></script>
@@ -46,10 +46,50 @@
 			}
 			
 		});
+
+	    $("#couplingTypeTooltip").tooltip({
+	        title: "<div>\
+				 - <b>HIGH</b>: 가능한 DB의 컬럼타입과 동일한 타입으로 결정됩니다<br>\
+				 - <b>MIDDLE</b>: 숫자(int, long...)과 날짜 타입(Date)만 변경되며, 나머지는 String 타입으로 결정됩니다.<br>\
+				 - <b>LOW</b>: 숫자 타입(int, long...)만 변경되며, 나머지는 String 타입으로 결정됩니다.<br>\
+				 - <b>NO</b>: 모든 프로퍼티 타입은 String 타입으로 결정됩니다.\
+				 </div>",
+	        html: true
+	    });
+	    
+	    $("#prefixExceptTooltip").tooltip({
+	        title: "<div>\
+				 테이블명에서 불필요한 접두어를 제외합니다.<br>\
+				 e.g. 테이블명이  <b><i>T_ADMIN</i></b>이고 PREFIX EXCEPT을 <b><i>T_</i></b>로 지정할 경우, 도메인명은 <b><i>admin</i></b>으로 결정됩니다.<br>\
+				 PREFIX EXCEPT를 지정하지 않을 경우, 도메인명은 <b><i>tAdmin</i></b>으로 결정됩니다.\
+				 </div>",
+	        html: true,
+	        placement: "bottom"
+	    });
+	    
+	    $("#classNameSuffixTooltip").tooltip({
+	        title: "<div>\
+				 도메인 클래스의 접미어를 추가합니다.<br>\
+				 e.g. 테이블명이  <b><i>T_ADMIN</i></b>이고 DOMAIN NAME SUFFIX을 <b><i>Vo</i></b>로 지정할 경우, 도메인명은 <b><i>tAdminVo</i></b>으로 결정됩니다.\
+				 </div>",
+	        html: true,
+	        placement: "bottom"
+	    });
+	    
+	    $("#domainStyleTooltip").tooltip({
+	        title: "<div>\
+				 도메인 클래스의 스타일을 지정합니다.<br>\
+				 * 현재는 POJO만 제공하며, 추후 LOMBOK 스타일을 지원 예정입니다.\
+				 </div>",
+	        html: true,
+	        placement: "bottom"
+	    });
+	    
 	});
 	</script>
 </head>
 <body data-ng-app="myApp" class="ng-cloak">
+
 	<div class="container" data-ng-controller="EcsController as ctrl">
 		<h2>MyBro</h2>
 		<div class="panel panel-default">
@@ -163,9 +203,8 @@
 							<label class="col-md-2 control-lable" for="mapperType">MAPPER TYPE</label>
 							<div class="col-md-3">
 								<select id="mapperType" name="mapperType" data-ng-model="ctrl.mappingOption.mapperType" class="form-control" required>
-									<option value="MYBATIS">MYBATIS</option>
+									<option value="MYBATIS" selected="selected">MYBATIS</option>
 									<option value="IBATIS">IBATIS</option>
-									<option value="LOMBOK">LOMBOK</option>
 								</select>
 								<div class="has-error" data-ng-show="optionForm.$dirty">
 									<span data-ng-show="optionForm.mapperType.$error.required">This is a required field</span>
@@ -173,12 +212,16 @@
 							</div>
 
 							<!-- COUPLING TYPE -->
-							<label class="col-md-2 control-lable" for="file">COUPLING TYPE</label>
+							<label class="col-md-2 control-lable" for="file">COUPLING TYPE
+								<a href="" >
+									<span id="couplingTypeTooltip" class="glyphicon glyphicon-question-sign"></span>
+						        </a>
+							</label>
 							<div class="col-md-3">
 								<select id="couplingType" name="couplingType" data-ng-model="ctrl.mappingOption.couplingType" class="form-control" required>
 									<option value="HIGH">HIGH</option>
 									<option value="MIDDLE" selected="selected">MIDDLE</option>
-									<option value="LOW">LOW</option>
+									<option value="LOW" selected="selected">LOW</option>
 									<option value="NO">NO</option>
 								</select>
 								<div class="has-error" data-ng-show="optionForm.$dirty">
@@ -191,15 +234,42 @@
 					<div class="row">
 						<div class="form-group col-md-12">
 							<!-- PREFIX EXCEPT -->
-							<label class="col-md-2 control-lable" for="file">PREFIX EXCEPT</label>
+							<label class="col-md-2 control-lable" for="file">PREFIX EXCEPT
+								<a href="" >
+									<span id="prefixExceptTooltip" class="glyphicon glyphicon-question-sign"></span>
+						        </a>
+							</label>
 							<div class="col-md-3">
 								<input type="text" data-ng-model="ctrl.mappingOption.prefixExcept" name="prefixExcept" class="username form-control input-sm" placeholder="Enter prefix except" />
 							</div>
 
 							<!-- CLASS NAME SUFFIX -->
-							<label class="col-md-2 control-lable" for="file">CLASS NAME SUFFIX</label>
+							<label class="col-md-2 control-lable" for="file">DOMAIN NAME SUFFIX
+								<a href="" >
+									<span id="classNameSuffixTooltip" class="glyphicon glyphicon-question-sign"></span>
+						        </a>
+							</label>
 							<div class="col-md-3">
 								<input type="text" data-ng-model="ctrl.mappingOption.classNameSuffix" name="classNameSuffix" class="username form-control input-sm" placeholder="Enter class name suffix" />
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="form-group col-md-12">
+							<!-- PREFIX EXCEPT -->
+							<label class="col-md-2 control-lable" for="file">DOMAIN STYLE
+								<a href="" >
+									<span id="domainStyleTooltip" class="glyphicon glyphicon-question-sign"></span>
+						        </a>
+							</label>
+							<div class="col-md-3">
+								<select id="dtoStyle" name="dtoStyle" data-ng-model="ctrl.mappingOption.dtoStyle" class="form-control" required>
+									<option value="POJO" selected="selected">POJO</option>
+								</select>
+								<div class="has-error" data-ng-show="optionForm.$dirty">
+									<span data-ng-show="optionForm.dtoStyle.$error.required">This is a required field</span>
+								</div>
 							</div>
 						</div>
 					</div>
