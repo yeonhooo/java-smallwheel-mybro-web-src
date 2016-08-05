@@ -18,6 +18,7 @@ public class App extends SpringBootServletInitializer {
 		if (System.getProperty("os.name").startsWith("Windows")) {
 			Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler http://" + InetAddress.getLocalHost().getHostAddress());
 		}
+		
 	}
 
 }
