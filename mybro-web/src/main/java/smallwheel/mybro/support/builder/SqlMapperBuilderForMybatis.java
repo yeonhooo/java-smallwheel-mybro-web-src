@@ -1,6 +1,5 @@
 package smallwheel.mybro.support.builder;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -44,12 +43,6 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 	public void build(String userId, TableInfo table, ClassFileInfo classFile) {
 		
 		String sqlMapFilePath = Path.RESULT_DES_DIR + userId + Delimiter.VERTICAL_SLUSH + "mapper/sqlmap/";
-		File dir = new File(sqlMapFilePath);
-		if (!dir.isDirectory()) {
-			// 디렉토리가 존재하지 않는다면 디렉토리 생성
-			dir.mkdirs();
-		}
-		
 		MapperInterfaceInfo mapperInterfaceFile = new MapperInterfaceInfo();
 		
 		String tableName = table.getName();

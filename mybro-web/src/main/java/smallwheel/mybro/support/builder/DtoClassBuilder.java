@@ -22,14 +22,8 @@ public class DtoClassBuilder {
 	
 	public void build(String userId, ClassFileInfo classFile) {
 		
-		String className = classFile.getName();
 		File dir = new File(Path.RESULT_DES_DIR + userId + Delimiter.VERTICAL_SLUSH + "dto/");
-		if (!dir.isDirectory()) {
-			// 디렉토리가 존재하지 않는다면 디렉토리 생성
-			dir.mkdirs();
-		} else {
-			// TODO 기존 디렉로리 삭제 후 재생성
-		}
+		String className = classFile.getName();
 		
 		try (FileWriter writer = new FileWriter(dir.getPath() + Delimiter.VERTICAL_SLUSH + className + ".java")){
 			
