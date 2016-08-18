@@ -94,7 +94,7 @@
 		<h2>MyBro</h2>
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<span class="lead">Database connection info</span>
+				<span class="lead">1. Database connection info</span>
 			</div>
 			<div class="formcontainer">
 				<form data-ng-submit="ctrl.submit()" name="connectionForm" class="form-horizontal">
@@ -159,7 +159,6 @@
 								<input type="number" data-ng-model="ctrl.connectionInfo.port" id="port" name="port" class="username form-control input-sm" placeholder="Enter port number" required data-ng-minlength="3" />
 								<div class="has-error" data-ng-show="connectionForm.$dirty">
 									<span data-ng-show="connectionForm.port.$error.required">This is a required field</span> 
-									<span data-ng-show="connectionForm.port.$error.minlength">Minimum length required is 3</span> 
 									<span data-ng-show="connectionForm.port.$invalid">This field is invalid </span>
 								</div>
 							</div>
@@ -170,7 +169,6 @@
 								<input type="text" data-ng-model="ctrl.connectionInfo.dbName" name="dbName" class="username form-control input-sm" placeholder="Enter database name" required data-ng-minlength="3" />
 								<div class="has-error" data-ng-show="connectionForm.$dirty">
 									<span data-ng-show="connectionForm.dbName.$error.required">This is a required field</span> 
-									<span data-ng-show="connectionForm.dbName.$error.minlength">Minimum length required is 3</span> 
 									<span data-ng-show="connectionForm.dbName.$invalid">This field is invalid </span>
 								</div>
 							</div>
@@ -193,7 +191,7 @@
 		<!-- Mapping Option -->
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<span class="lead">Mapping Option</span>
+				<span class="lead">2. Mapping Option</span>
 			</div>
 			<div class="mapping-option-container">
 				<form data-ng-submit="ctrl.submit()" name="optionForm" class="form-horizontal">
@@ -276,11 +274,11 @@
 					
 					<div class="row">
 						<div class="form-actions floatRight">
-							<button type="button" data-ng-click="ctrl.generate()" class="btn btn-info btn-sm" data-ng-disabled="optionForm.$pristine">Generate</button>
-							<a class="btn btn-info btn-sm" href="/api/tables/zip">
+							<button type="button" data-ng-click="ctrl.generate()" class="btn btn-info btn-sm" data-ng-disabled="connectionForm.$invalid">Generate</button>
+							<button type="button" onclick="location.href='/api/tables/zip'" class="btn btn-info btn-sm" data-ng-disabled="connectionForm.$invalid">
 								<span class="glyphicon glyphicon-download"></span>
 								Download
-							</a>
+							</button>
 						</div>
 					</div>
 					
