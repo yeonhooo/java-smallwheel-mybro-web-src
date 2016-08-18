@@ -6,7 +6,7 @@ App.controller('EcsController', [ '$scope', 'EcsService',
 			self.checkedTables = [];
 			
 			self.connectionInfo = {
-				dbmsType : '',
+				dbmsType : 'MYSQL',
 				host : '',
 				port : 0,
 				userName : '',
@@ -15,11 +15,11 @@ App.controller('EcsController', [ '$scope', 'EcsService',
 			};
 			
 			self.mappingOption = {
-				mapperType : '',
-				couplingType : '',
+				mapperType : 'MYBATIS',
+				couplingType : 'LOW',
 				prefixExcept : '',
 				classNameSuffix : '',
-				dtoStyle : ''
+				dtoStyle : 'POJO'
 			};
 
 			self.connect = function(connectionInfo) {
