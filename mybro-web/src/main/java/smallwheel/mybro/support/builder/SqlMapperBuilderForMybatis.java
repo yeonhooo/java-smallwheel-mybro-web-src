@@ -197,7 +197,7 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 			LOGGER.error(e.getMessage(), e);
 		}
 		
-		buildMapperInterface(userId, classFile, mapperInterfaceFile);
+		buildMapperInterface(userId, entityName, classFile, mapperInterfaceFile);
 	}
 
 	/**
@@ -386,11 +386,12 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 	/**
 	 * java mapper interface을 생성한다.
 	 * 
+	 * @param entityName 
 	 * @param classFile
 	 * @param mapperInterfaceFile
 	 */
-	private void buildMapperInterface(String userId, ClassFileInfo classFile, MapperInterfaceInfo mapperInterfaceFile) {
-		String interfaceName = makeInterfaceName(classFile.getName());
+	private void buildMapperInterface(String userId, String entityName, ClassFileInfo classFile, MapperInterfaceInfo mapperInterfaceFile) {
+		String interfaceName = makeInterfaceName(entityName);
 
 		try (
 			// File Name 을 만든다.
@@ -420,9 +421,9 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 		}
 	}
 	
-	/** 클래스명을 만든다. */
-	private String makeInterfaceName(String classFileName) {
-		return classFileName + Mapper.MAPPER_INTERFACE_SUFFIX;
+	/** 인터페이스명을 만든다. */
+	private String makeInterfaceName(String entityName) {
+		return entityName + Mapper.MAPPER_INTERFACE_SUFFIX;
 	}
 	
 	/** 파라미터명을 만든다. */
