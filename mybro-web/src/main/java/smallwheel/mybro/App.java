@@ -1,17 +1,16 @@
 package smallwheel.mybro;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.Arrays;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.Arrays;
 
 @EnableAutoConfiguration
 @ComponentScan
