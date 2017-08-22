@@ -84,7 +84,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		} else if (DBMS.MSSQL.equals(dbmsType)) {
 			return "select 1";
 		} else if (DBMS.ORACLE.equals(dbmsType)) {
-			return "select 1";
+			return "select 1 from dual";
 		} else {
 			return null;
 		}
