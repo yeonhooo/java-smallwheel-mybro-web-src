@@ -9,41 +9,41 @@ import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
 
 /**
- * «¡∑Œ∆€∆º ∆ƒ¿œ ∞¸∏Æ 
- * 
+ * ÌîÑÎ°úÌçºÌã∞ ÌååÏùº Í¥ÄÎ¶¨ 
+ *
  * @author yeonhooo
  *
  */
 public final class ContextMaster {
-	
-	private final static Logger LOGGER = Logger.getLogger(ContextMaster.class);
-	private static ResourceBundle resources;
 
-	/**
-	 * Don't let anyone instantiate this class.
-	 */
-	private ContextMaster() { };
-	
-	public static String getString(String name) {
-		try {
-			// resources = ResourceBundle.getBundle("conf.environment" + filename, Locale.getDefault());
-			FileInputStream fis = new FileInputStream(".\\environment.properties");
-			resources = new PropertyResourceBundle(fis);
-		} catch (MissingResourceException | IOException mre) {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug(" ContextMaster getString() ", mre);
-			}
-		}
-		return resources.getString(name);
-	}
+    private final static Logger LOGGER = Logger.getLogger(ContextMaster.class);
+    private static ResourceBundle resources;
 
-	public static void reload() {
-		try {
-			resources = ResourceBundle.getBundle(".\\environment.properties", Locale.getDefault());
-		} catch (MissingResourceException mre) {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug(" ContextMaster reload() ", mre);
-			}
-		}
-	}
+    /**
+     * Don't let anyone instantiate this class.
+     */
+    private ContextMaster() { };
+
+    public static String getString(String name) {
+        try {
+            // resources = ResourceBundle.getBundle("conf.environment" + filename, Locale.getDefault());
+            FileInputStream fis = new FileInputStream(".\\environment.properties");
+            resources = new PropertyResourceBundle(fis);
+        } catch (MissingResourceException | IOException mre) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(" ContextMaster getString() ", mre);
+            }
+        }
+        return resources.getString(name);
+    }
+
+    public static void reload() {
+        try {
+            resources = ResourceBundle.getBundle(".\\environment.properties", Locale.getDefault());
+        } catch (MissingResourceException mre) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(" ContextMaster reload() ", mre);
+            }
+        }
+    }
 }

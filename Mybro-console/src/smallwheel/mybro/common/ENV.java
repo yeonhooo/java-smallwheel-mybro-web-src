@@ -4,108 +4,108 @@ import java.io.File;
 import org.apache.log4j.Logger;
 
 /**
- * Àü¿ª È¯°æÁ¤º¸
- * 
+ * ì „ì—­ í™˜ê²½ì •ë³´
+ *
  * @author yeonhooo
  *
  */
 public class ENV {
 
-	private final static Logger LOGGER = Logger.getLogger(ENV.class);
-	
-	public static final String VER = "DAOMaker 20110822.0940"; // ¼­¹ö ¹öÀü
+    private final static Logger LOGGER = Logger.getLogger(ENV.class);
 
-	/** Type of Coupling */
-	public static String couplingType = "MIDDLE";
-	/** mapper type */
-	public static String mapperType = Constants.Mapper.MYBATIS;
-	/**
-	 * ¿£Æ¼Æ¼¸í¿¡¼­ Á¦¿ÜÇÒ ¹®ÀÚ¿­
-	 * <pre>
-	 * e.g. Å×ÀÌºí¸íÀÌ NQR_BILL_DETAIL ÀÇ °æ¿ì, ±âº» ¿£Æ¼Æ¼¸íÀº NqrBillDetail ÀÌ µÈ´Ù
-	 * ÀÌ ¶§ PREFIX_EXCEPT À» "NQR_" ·Î ¼³Á¤ÇÒ °æ¿ì, ¿£Æ¼Æ¼¸íÀº NqrBillDetail °¡ ¾Æ´Ñ BillDetail°¡ µÈ´Ù.
-	 * </pre>
-	 */
-	public static String prefixExcept;
-	/** µ¥ÀÌÅÍº£ÀÌ½º Á¾·ù */
-	public static String dbms;
-	/** µ¥ÀÌÅÍº£ÀÌ½º ¾ÆÀÌÇÇ */
-	public static String serverIp;
-	/** µ¥ÀÌÅÍº£ÀÌ½º Æ÷Æ® */
-	public static String port;
-	/** µ¥ÀÌÅÍº£ÀÌ½º ¾ÆÀÌµğ */
-	public static String userId;
-	/** µ¥ÀÌÅÍº£ÀÌ½º ÆĞ½º¿öµå */
-	public static String userPass;
-	/** µ¥ÀÌÅÍº£ÀÌ½º¸í */
-	public static String dbName;
-	/** Å×ÀÌºí¸í ¸®½ºÆ® */
-	public static String tableNameList; 
-	/** 
-	 * ÀÚÆÄ Å¬·¡½º ÆÄÀÏ¸í Á¢¹Ì¾î
-	 * <pre>
-	 * e.g. Å×ÀÌºí¸íÀÌ USER_INFO ÀÎ °æ¿ì, ±âº» ÀÚ¹ÙÆÄÀÏ¸íÀº UserInfo.java°¡ µÈ´Ù.
-	 * ÀÌ ¶§ classNameSuffix¸¦ "Dto"·Î ¼³Á¤ÇÒ °æ¿ì ÀÚ¹ÙÆÄÀÏ¸íÀº UserInfoDto.java°¡ µÇ¸ç,
-	 * classNameSuffix¸¦ "Vo"·Î ¼³Á¤ÇÒ °æ¿ì ÀÚ¹ÙÆÄÀÏ¸íÀº UserInfoVo.java°¡ µÈ´Ù.
-	 * </pre>
-	 */
-	public static String classNameSuffix;
+    public static final String VER = "DAOMaker 20110822.0940"; // ì„œë²„ ë²„ì „
+
+    /** Type of Coupling */
+    public static String couplingType = "MIDDLE";
+    /** mapper type */
+    public static String mapperType = Constants.Mapper.MYBATIS;
+    /**
+     * ì—”í‹°í‹°ëª…ì—ì„œ ì œì™¸í•  ë¬¸ìì—´
+     * <pre>
+     * e.g. í…Œì´ë¸”ëª…ì´ NQR_BILL_DETAIL ì˜ ê²½ìš°, ê¸°ë³¸ ì—”í‹°í‹°ëª…ì€ NqrBillDetail ì´ ëœë‹¤
+     * ì´ ë•Œ PREFIX_EXCEPT ì„ "NQR_" ë¡œ ì„¤ì •í•  ê²½ìš°, ì—”í‹°í‹°ëª…ì€ NqrBillDetail ê°€ ì•„ë‹Œ BillDetailê°€ ëœë‹¤.
+     * </pre>
+     */
+    public static String prefixExcept;
+    /** ë°ì´í„°ë² ì´ìŠ¤ ì¢…ë¥˜ */
+    public static String dbms;
+    /** ë°ì´í„°ë² ì´ìŠ¤ ì•„ì´í”¼ */
+    public static String serverIp;
+    /** ë°ì´í„°ë² ì´ìŠ¤ í¬íŠ¸ */
+    public static String port;
+    /** ë°ì´í„°ë² ì´ìŠ¤ ì•„ì´ë”” */
+    public static String userId;
+    /** ë°ì´í„°ë² ì´ìŠ¤ íŒ¨ìŠ¤ì›Œë“œ */
+    public static String userPass;
+    /** ë°ì´í„°ë² ì´ìŠ¤ëª… */
+    public static String dbName;
+    /** í…Œì´ë¸”ëª… ë¦¬ìŠ¤íŠ¸ */
+    public static String tableNameList;
+    /**
+     * ìíŒŒ í´ë˜ìŠ¤ íŒŒì¼ëª… ì ‘ë¯¸ì–´
+     * <pre>
+     * e.g. í…Œì´ë¸”ëª…ì´ USER_INFO ì¸ ê²½ìš°, ê¸°ë³¸ ìë°”íŒŒì¼ëª…ì€ UserInfo.javaê°€ ëœë‹¤.
+     * ì´ ë•Œ classNameSuffixë¥¼ "Dto"ë¡œ ì„¤ì •í•  ê²½ìš° ìë°”íŒŒì¼ëª…ì€ UserInfoDto.javaê°€ ë˜ë©°,
+     * classNameSuffixë¥¼ "Vo"ë¡œ ì„¤ì •í•  ê²½ìš° ìë°”íŒŒì¼ëª…ì€ UserInfoVo.javaê°€ ëœë‹¤.
+     * </pre>
+     */
+    public static String classNameSuffix;
 
 
-	/** º¯¼ö »ı¼º ÈÄ, ÇÁ·ÎÆÛÆ¼ ÆÄÀÏ·ÎºÎÅÍ ¼Ó¼ºÀ» ÀĞ¾î °ªÀ» º¯¼ö¿¡ ÀúÀåÇÑ´Ù(µ¥ÀÌÅÍº£ÀÌ½º °ü·Ã). */
-	public static void init() {
+    /** ë³€ìˆ˜ ìƒì„± í›„, í”„ë¡œí¼í‹° íŒŒì¼ë¡œë¶€í„° ì†ì„±ì„ ì½ì–´ ê°’ì„ ë³€ìˆ˜ì— ì €ì¥í•œë‹¤(ë°ì´í„°ë² ì´ìŠ¤ ê´€ë ¨). */
+    public static void init() {
 
-		if (checkNull("COUPLING_TYPE"))
-			couplingType = ContextMaster.getString("COUPLING_TYPE");
-		if (checkNull("DBMS"))
-			dbms = ContextMaster.getString("DBMS");
-		if (checkNull("SERVER_IP"))
-			serverIp = ContextMaster.getString("SERVER_IP");
-		if (checkNull("PORT"))
-			port = ContextMaster.getString("PORT");
-		if (checkNull("USER_ID"))
-			userId = ContextMaster.getString("USER_ID");
-		if (checkNull("USER_PASS"))
-			userPass = ContextMaster.getString("USER_PASS");
-		if (checkNull("DB_NAME"))
-			dbName = ContextMaster.getString("DB_NAME");
-		if (checkNull("TABLES"))
-			tableNameList = ContextMaster.getString("TABLES");
-		if (checkNull("MAPPER_TYPE"))
-			mapperType = ContextMaster.getString("MAPPER_TYPE");
-		if (checkNull("PREFIX_EXCEPT"))
-			prefixExcept = ContextMaster.getString("PREFIX_EXCEPT");
-		if (checkNull("CLASS_NAME_SUFFIX"))
-			classNameSuffix = ContextMaster.getString("CLASS_NAME_SUFFIX");
+        if (checkNull("COUPLING_TYPE"))
+            couplingType = ContextMaster.getString("COUPLING_TYPE");
+        if (checkNull("DBMS"))
+            dbms = ContextMaster.getString("DBMS");
+        if (checkNull("SERVER_IP"))
+            serverIp = ContextMaster.getString("SERVER_IP");
+        if (checkNull("PORT"))
+            port = ContextMaster.getString("PORT");
+        if (checkNull("USER_ID"))
+            userId = ContextMaster.getString("USER_ID");
+        if (checkNull("USER_PASS"))
+            userPass = ContextMaster.getString("USER_PASS");
+        if (checkNull("DB_NAME"))
+            dbName = ContextMaster.getString("DB_NAME");
+        if (checkNull("TABLES"))
+            tableNameList = ContextMaster.getString("TABLES");
+        if (checkNull("MAPPER_TYPE"))
+            mapperType = ContextMaster.getString("MAPPER_TYPE");
+        if (checkNull("PREFIX_EXCEPT"))
+            prefixExcept = ContextMaster.getString("PREFIX_EXCEPT");
+        if (checkNull("CLASS_NAME_SUFFIX"))
+            classNameSuffix = ContextMaster.getString("CLASS_NAME_SUFFIX");
 
-		File dir = new File(Constants.Path.DTO_CLASS_DES_DIR);
-		if (!dir.isDirectory()) {
-			// µğ·ºÅä¸®°¡ Á¸ÀçÇÏÁö ¾Ê´Â´Ù¸é µğ·ºÅä¸® »ı¼º
-			dir.mkdirs();
-		}
-		dir = new File(Constants.Path.SQL_MAPPER_DES_DIR);
-		if (!dir.isDirectory()) {
-			dir.mkdirs();
-		}
+        File dir = new File(Constants.Path.DTO_CLASS_DES_DIR);
+        if (!dir.isDirectory()) {
+            // ë””ë ‰í† ë¦¬ê°€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ”ë‹¤ë©´ ë””ë ‰í† ë¦¬ ìƒì„±
+            dir.mkdirs();
+        }
+        dir = new File(Constants.Path.SQL_MAPPER_DES_DIR);
+        if (!dir.isDirectory()) {
+            dir.mkdirs();
+        }
 
-		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info("############## [ Starting MyBro !!! ] ########################");
-			LOGGER.info("#");
-			LOGGER.info("#\tDTO class files directory:\t" + Constants.Path.DTO_CLASS_DES_DIR);
-			LOGGER.info("#\tSql mapper files directory:\t" + Constants.Path.SQL_MAPPER_DES_DIR);
-			LOGGER.info("#\tLog directory:\t" + Constants.Path.LOG_DIR);
-			LOGGER.info("#\tCoupling type:\t" + couplingType);
-			LOGGER.info("#\tMapper type:\t" + mapperType);
-			LOGGER.info("#\tExclude prefix string from entity name:\t" + prefixExcept);
-			LOGGER.info("#\tJava class name suffix: \t" + classNameSuffix);
-			LOGGER.info("##############################################################\n");
-		}
-	}
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("############## [ Starting MyBro !!! ] ########################");
+            LOGGER.info("#");
+            LOGGER.info("#\tDTO class files directory:\t" + Constants.Path.DTO_CLASS_DES_DIR);
+            LOGGER.info("#\tSql mapper files directory:\t" + Constants.Path.SQL_MAPPER_DES_DIR);
+            LOGGER.info("#\tLog directory:\t" + Constants.Path.LOG_DIR);
+            LOGGER.info("#\tCoupling type:\t" + couplingType);
+            LOGGER.info("#\tMapper type:\t" + mapperType);
+            LOGGER.info("#\tExclude prefix string from entity name:\t" + prefixExcept);
+            LOGGER.info("#\tJava class name suffix: \t" + classNameSuffix);
+            LOGGER.info("##############################################################\n");
+        }
+    }
 
-	private static boolean checkNull(String name) {
-		if (ContextMaster.getString(name) == null) {
-			return false;
-		}
-		return true;
-	}
+    private static boolean checkNull(String name) {
+        if (ContextMaster.getString(name) == null) {
+            return false;
+        }
+        return true;
+    }
 }

@@ -6,26 +6,26 @@ import smallwheel.mybro.support.builder.SqlMapperBuilderForMybatis;
 
 /**
  * SqlMapperBuilderFactory
- * 
+ *
  * @author yeonhooo
  */
 public class SqlMapperBuilderFactory {
 
-	/**
-	 * mapperType¿¡ ÇØ´çÇÏ´Â SqlMapperBuilder¸¦ »ı¼ºÇÑ´Ù.
-	 * 
-	 * @param mapperType
-	 * @return mapperTypeº° SqlMapperBuilder
-	 */
-	public SqlMapperBuilder createSqlMapperBuilder(String mapperType) {
+    /**
+     * mapperTypeì— í•´ë‹¹í•˜ëŠ” SqlMapperBuilderë¥¼ ìƒì„±í•œë‹¤.
+     *
+     * @param mapperType
+     * @return mapperTypeë³„ SqlMapperBuilder
+     */
+    public SqlMapperBuilder createSqlMapperBuilder(String mapperType) {
 
-		// ±âº» ¸ÊÆÛ´Â MyBatis·Î ¼³Á¤ÇÑ´Ù
-		SqlMapperBuilder builder = new SqlMapperBuilderForMybatis();
+        // ê¸°ë³¸ ë§µí¼ëŠ” MyBatisë¡œ ì„¤ì •í•œë‹¤
+        SqlMapperBuilder builder = new SqlMapperBuilderForMybatis();
 
-		if (mapperType.equalsIgnoreCase(Constants.Mapper.IBATIS)) {
-			builder = new SqlMapperBuilderForIbatis();
-		}
+        if (mapperType.equalsIgnoreCase(Constants.Mapper.IBATIS)) {
+            builder = new SqlMapperBuilderForIbatis();
+        }
 
-		return builder;
-	}
+        return builder;
+    }
 }

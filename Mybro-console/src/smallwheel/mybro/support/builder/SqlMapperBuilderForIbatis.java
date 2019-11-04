@@ -19,360 +19,360 @@ import smallwheel.mybro.common.SharedInfo;
 import smallwheel.mybro.common.TableInfo;
 
 /**
- * 
- * Ibatis¿ë SqlMapperBuilder Å¬·¡½º
- * 
+ *
+ * Ibatisìš© SqlMapperBuilder í´ë˜ìŠ¤
+ *
  * @author yeonhooo@gmail.com
  */
 public class SqlMapperBuilderForIbatis extends SqlMapperBuilder {
-	
-	private final static Logger LOGGER = Logger.getLogger(SqlMapperBuilderForIbatis.class);
-	private final SharedInfo sharedInfo = SharedInfo.getInstance();
-	
-	/** 
-	 * SqlMap.xml ÆÄÀÏÀ» ¸¸µç´Ù. 
-	 * @param table list 
-	 * */
-	@Override
-	public void build() {
-		
-		TableInfo table;
-		ClassFileInfo classFile;
-		
-		for (int i = 0; i < sharedInfo.getTableInfoList().size(); i++) {
-			
-			table = sharedInfo.getTableInfoList().get(i);
-			classFile = sharedInfo.getClassFileInfoList().get(i);
-			
-			String tableName = table.getName();
-			String entityName = table.getEntityName();
-			
-			final Element root = new Element("sqlMap");
-			final Element typeAlias = new Element("typeAlias");
-			final Element resultMap = new Element("resultMap");
-			final Element sql = new Element("sql");
-			final Element insert = new Element("insert");
-			final Element select = new Element("select");
-			final Element selectOne = new Element("select");
-			final Element update = new Element("update");
-			final Element delete = new Element("delete");
-			
-			// root ³ëµå ¼³Á¤
-			root.setAttribute(makeAttribute("namespace", entityName));
-			
-			// typeAlias ³ëµå ¼³Á¤
-			final String typeAliasText = "class" + classFile.getName();
-			typeAlias.setAttribute(makeAttribute("alias", typeAliasText));
-			typeAlias.setAttribute(makeAttribute("type", classFile.getName()));		
-			
-			// resultMap ³ëµå ¼³Á¤
-			final String resultMapText = "ret" + classFile.getName();
-			resultMap.setAttribute(makeAttribute("class", typeAliasText));
-			resultMap.setAttribute(makeAttribute("id", resultMapText));		
-			
-			// result ³ëµå ¼³Á¤
-			for (int j = 0; j < classFile.getPropertyList().size(); j++) {
-				Element result = new Element("result");
-				result.setAttribute(makeAttribute("property", classFile.getPropertyList().get(j).getName()));
-				result.setAttribute(makeAttribute("javaType", classFile.getPropertyList().get(j).getType()));
-				result.setAttribute(makeAttribute("column", table.getColumnInfoList().get(j).getName()));
-				result.setAttribute(makeAttribute("jdbcType", table.getColumnInfoList().get(j).getType()));
-				resultMap.addContent(result);
-			}
-			
-			// dynamicWhere sql map »ı¼º
-			sql.setAttribute(makeAttribute("id", "dynamicWhere"));
-			sql.addContent(makeDynamicWhere(table, classFile));
-			
-			// insert sql map »ı¼º
-			insert.setAttribute(makeAttribute("id", "insert" + entityName));
-			insert.setAttribute(makeAttribute("parameterClass", typeAliasText));
-			insert.addContent(makeInsertSqlMap(table, classFile));
-			
-			// select list sql map »ı¼º
-			select.setAttribute(makeAttribute("id", "select" + entityName + "List"));
-			select.setAttribute(makeAttribute("parameterClass", typeAliasText));
-			select.setAttribute(makeAttribute("resultClass", typeAliasText));
-			select.addContent(makeSelectSqlMap(table, classFile));
-			// µ¿Àû WHEREÀı »ı¼º
-			select.addContent(addDynamicWhere(tableName));
-			
-			// select sql map »ı¼º
-			selectOne.setAttribute(makeAttribute("id", "select" + entityName));
-			selectOne.setAttribute(makeAttribute("parameterClass", typeAliasText));
-			selectOne.setAttribute(makeAttribute("resultClass", typeAliasText));
-			selectOne.addContent(makeSelectSqlMap(table, classFile));
-			selectOne.addContent(makePrimaryKeyWhere(table, classFile));
-			
-			// update sql map »ı¼º
-			update.setAttribute(makeAttribute("id", "update" + entityName));
-			update.setAttribute(makeAttribute("parameterClass", typeAliasText));
-			update.addContent(makeUpdateSqlMapHead(tableName));
-			update.addContent(makeDynamicUpdateSqlMap(table, classFile));
-			update.addContent(makePrimaryKeyWhere(table, classFile));
-			
-			// delete sql map »ı¼º
-			delete.setAttribute(makeAttribute("id", "delete" + entityName));
-			delete.setAttribute(makeAttribute("parameterClass", typeAliasText));
-			delete.addContent(makeDeleteSqlMap(tableName));
-			delete.addContent(makePrimaryKeyWhere(table, classFile));
-			
-			// root ¿¡ Ãß°¡
-			root.addContent(new Comment(" Use type aliases to avoid typing the full class name every time. "));
-			root.addContent(typeAlias);
-			root.addContent(resultMap);
-			root.addContent("\n");
-			
-			root.addContent(new Comment(" Dynamic Where Condition "));
-			root.addContent(sql);
-			root.addContent("\n");
-			
-			root.addContent(new Comment(" Insert " + tableName + " "));
-			root.addContent(insert);
-			root.addContent("\n");
-			
-			root.addContent(new Comment(" Select " + tableName + " List "));
-			root.addContent(select);
-			root.addContent("\n");
-			
-			root.addContent(new Comment(" Select " + tableName + " "));
-			root.addContent(selectOne);
-			root.addContent("\n");
-			
-			root.addContent(new Comment(" Update " + tableName + " "));
-			root.addContent(update);
-			root.addContent("\n");
-			
-			root.addContent(new Comment(" Delete " + tableName + " "));
-			root.addContent(delete);
-			
-			// DTD ÁöÁ¤ ÈÄ, ÆÄÀÏ·Î ÀúÀå
+
+    private final static Logger LOGGER = Logger.getLogger(SqlMapperBuilderForIbatis.class);
+    private final SharedInfo sharedInfo = SharedInfo.getInstance();
+
+    /**
+     * SqlMap.xml íŒŒì¼ì„ ë§Œë“ ë‹¤.
+     * @param table list
+     * */
+    @Override
+    public void build() {
+
+        TableInfo table;
+        ClassFileInfo classFile;
+
+        for (int i = 0; i < sharedInfo.getTableInfoList().size(); i++) {
+
+            table = sharedInfo.getTableInfoList().get(i);
+            classFile = sharedInfo.getClassFileInfoList().get(i);
+
+            String tableName = table.getName();
+            String entityName = table.getEntityName();
+
+            final Element root = new Element("sqlMap");
+            final Element typeAlias = new Element("typeAlias");
+            final Element resultMap = new Element("resultMap");
+            final Element sql = new Element("sql");
+            final Element insert = new Element("insert");
+            final Element select = new Element("select");
+            final Element selectOne = new Element("select");
+            final Element update = new Element("update");
+            final Element delete = new Element("delete");
+
+            // root ë…¸ë“œ ì„¤ì •
+            root.setAttribute(makeAttribute("namespace", entityName));
+
+            // typeAlias ë…¸ë“œ ì„¤ì •
+            final String typeAliasText = "class" + classFile.getName();
+            typeAlias.setAttribute(makeAttribute("alias", typeAliasText));
+            typeAlias.setAttribute(makeAttribute("type", classFile.getName()));
+
+            // resultMap ë…¸ë“œ ì„¤ì •
+            final String resultMapText = "ret" + classFile.getName();
+            resultMap.setAttribute(makeAttribute("class", typeAliasText));
+            resultMap.setAttribute(makeAttribute("id", resultMapText));
+
+            // result ë…¸ë“œ ì„¤ì •
+            for (int j = 0; j < classFile.getPropertyList().size(); j++) {
+                Element result = new Element("result");
+                result.setAttribute(makeAttribute("property", classFile.getPropertyList().get(j).getName()));
+                result.setAttribute(makeAttribute("javaType", classFile.getPropertyList().get(j).getType()));
+                result.setAttribute(makeAttribute("column", table.getColumnInfoList().get(j).getName()));
+                result.setAttribute(makeAttribute("jdbcType", table.getColumnInfoList().get(j).getType()));
+                resultMap.addContent(result);
+            }
+
+            // dynamicWhere sql map ìƒì„±
+            sql.setAttribute(makeAttribute("id", "dynamicWhere"));
+            sql.addContent(makeDynamicWhere(table, classFile));
+
+            // insert sql map ìƒì„±
+            insert.setAttribute(makeAttribute("id", "insert" + entityName));
+            insert.setAttribute(makeAttribute("parameterClass", typeAliasText));
+            insert.addContent(makeInsertSqlMap(table, classFile));
+
+            // select list sql map ìƒì„±
+            select.setAttribute(makeAttribute("id", "select" + entityName + "List"));
+            select.setAttribute(makeAttribute("parameterClass", typeAliasText));
+            select.setAttribute(makeAttribute("resultClass", typeAliasText));
+            select.addContent(makeSelectSqlMap(table, classFile));
+            // ë™ì  WHEREì ˆ ìƒì„±
+            select.addContent(addDynamicWhere(tableName));
+
+            // select sql map ìƒì„±
+            selectOne.setAttribute(makeAttribute("id", "select" + entityName));
+            selectOne.setAttribute(makeAttribute("parameterClass", typeAliasText));
+            selectOne.setAttribute(makeAttribute("resultClass", typeAliasText));
+            selectOne.addContent(makeSelectSqlMap(table, classFile));
+            selectOne.addContent(makePrimaryKeyWhere(table, classFile));
+
+            // update sql map ìƒì„±
+            update.setAttribute(makeAttribute("id", "update" + entityName));
+            update.setAttribute(makeAttribute("parameterClass", typeAliasText));
+            update.addContent(makeUpdateSqlMapHead(tableName));
+            update.addContent(makeDynamicUpdateSqlMap(table, classFile));
+            update.addContent(makePrimaryKeyWhere(table, classFile));
+
+            // delete sql map ìƒì„±
+            delete.setAttribute(makeAttribute("id", "delete" + entityName));
+            delete.setAttribute(makeAttribute("parameterClass", typeAliasText));
+            delete.addContent(makeDeleteSqlMap(tableName));
+            delete.addContent(makePrimaryKeyWhere(table, classFile));
+
+            // root ì— ì¶”ê°€
+            root.addContent(new Comment(" Use type aliases to avoid typing the full class name every time. "));
+            root.addContent(typeAlias);
+            root.addContent(resultMap);
+            root.addContent("\n");
+
+            root.addContent(new Comment(" Dynamic Where Condition "));
+            root.addContent(sql);
+            root.addContent("\n");
+
+            root.addContent(new Comment(" Insert " + tableName + " "));
+            root.addContent(insert);
+            root.addContent("\n");
+
+            root.addContent(new Comment(" Select " + tableName + " List "));
+            root.addContent(select);
+            root.addContent("\n");
+
+            root.addContent(new Comment(" Select " + tableName + " "));
+            root.addContent(selectOne);
+            root.addContent("\n");
+
+            root.addContent(new Comment(" Update " + tableName + " "));
+            root.addContent(update);
+            root.addContent("\n");
+
+            root.addContent(new Comment(" Delete " + tableName + " "));
+            root.addContent(delete);
+
+            // DTD ì§€ì • í›„, íŒŒì¼ë¡œ ì €ì¥
 			/*
 			<!DOCTYPE sqlMap      
     			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
     			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
 			 */
-			docType = new DocType(Constants.Mapper.IBATIS_ELEMENT_NAME, Constants.Mapper.IBATIS_PUBLIC_ID, Constants.Mapper.IBATIS_SYSTEM_ID);
-			doc = new Document(root, docType);
-			try {
-				// ÀúÀåÇÒ XML ÆÄÀÏ »ı¼ºÇÑ´Ù.
-				FileOutputStream fos = new FileOutputStream(Constants.Path.SQL_MAPPER_DES_DIR + entityName + ".sqlmap.xml");
-				XMLOutputter serializer = new XMLOutputter();
+            docType = new DocType(Constants.Mapper.IBATIS_ELEMENT_NAME, Constants.Mapper.IBATIS_PUBLIC_ID, Constants.Mapper.IBATIS_SYSTEM_ID);
+            doc = new Document(root, docType);
+            try {
+                // ì €ì¥í•  XML íŒŒì¼ ìƒì„±í•œë‹¤.
+                FileOutputStream fos = new FileOutputStream(Constants.Path.SQL_MAPPER_DES_DIR + entityName + ".sqlmap.xml");
+                XMLOutputter serializer = new XMLOutputter();
 //			XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
-				
-				// ±âº» Æ÷¸Ë ÇüÅÂ¸¦ ºÒ·¯¿Í ¼öÁ¤ÇÑ´Ù.
-				Format fm = serializer.getFormat();
-				// ÀÎÄÚµù º¯°æ
-				fm.setEncoding("UTF-8");
-				// ºÎ¸ğ, ÀÚ½Ä ÅÂ±×¸¦ ±¸º°ÇÏ±â À§ÇÑ ÅÇ ¹üÀ§¸¦ Á¤ÇÑ´Ù.
-				fm.setIndent("\t");
-				// ÅÂ±×°£ ÁÙ¹Ù²ŞÀ» ÁöÁ¤ÇÑ´Ù.
-				fm.setLineSeparator("\n");
-				
-				// ¼³Á¤ÇÑ XML ÆÄÀÏÀÇ Æ÷¸ËÀ» set ÇÑ´Ù.
-				serializer.setFormat(fm);
-				
-				// doc ÀÇ ³»¿ëÀ» fos ÇÏ¿© ÆÄÀÏÀ» »ı¼ºÇÑ´Ù.
-				serializer.output(doc, fos);
-				
-				fos.flush();
-				fos.close();
-				
-			} catch (FileNotFoundException e) {
-				LOGGER.error(e.getMessage(), e);
-			} catch (IOException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-		}
-	}
 
-	/**
-	 * µ¿Àû WHEREÀı »ı¼º
-	 * @param tableName
-	 * @return
-	 */
-	private Element makeDynamicWhere(TableInfo table, ClassFileInfo classFile) {
-		Element dynamic = new Element("dynamic");
-		dynamic.setAttribute(makeAttribute("prepend", "WHERE"));
+                // ê¸°ë³¸ í¬ë§· í˜•íƒœë¥¼ ë¶ˆëŸ¬ì™€ ìˆ˜ì •í•œë‹¤.
+                Format fm = serializer.getFormat();
+                // ì¸ì½”ë”© ë³€ê²½
+                fm.setEncoding("UTF-8");
+                // ë¶€ëª¨, ìì‹ íƒœê·¸ë¥¼ êµ¬ë³„í•˜ê¸° ìœ„í•œ íƒ­ ë²”ìœ„ë¥¼ ì •í•œë‹¤.
+                fm.setIndent("\t");
+                // íƒœê·¸ê°„ ì¤„ë°”ê¿ˆì„ ì§€ì •í•œë‹¤.
+                fm.setLineSeparator("\n");
+
+                // ì„¤ì •í•œ XML íŒŒì¼ì˜ í¬ë§·ì„ set í•œë‹¤.
+                serializer.setFormat(fm);
+
+                // doc ì˜ ë‚´ìš©ì„ fos í•˜ì—¬ íŒŒì¼ì„ ìƒì„±í•œë‹¤.
+                serializer.output(doc, fos);
+
+                fos.flush();
+                fos.close();
+
+            } catch (FileNotFoundException e) {
+                LOGGER.error(e.getMessage(), e);
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
+    }
+
+    /**
+     * ë™ì  WHEREì ˆ ìƒì„±
+     * @param tableName
+     * @return
+     */
+    private Element makeDynamicWhere(TableInfo table, ClassFileInfo classFile) {
+        Element dynamic = new Element("dynamic");
+        dynamic.setAttribute(makeAttribute("prepend", "WHERE"));
+
+        Element isNotEmpty = null;
+        Element isGreaterThan = null;
 		
-		Element isNotEmpty = null;
-		Element isGreaterThan = null;
-		
-		/* isNotEmpty ³ëµå ¼³Á¤
+		/* isNotEmpty ë…¸ë“œ ì„¤ì •
 		 * <isNotEmpty property="apprvFlag" prepend="AND">
 				APPRV_FLAG = #apprvFlag#
 			</isNotEmpty>
 		 */
-		for (int i = 0; i < classFile.getPropertyList().size(); i++) {
-			
-			if ("INT".equals(table.getColumnInfoList().get(i).getType().toUpperCase())) {
-				isGreaterThan = new Element("isGreaterThan");
-				isGreaterThan.setAttribute(makeAttribute("property", classFile.getPropertyList().get(i).getName()));
-				isGreaterThan.setAttribute(makeAttribute("prepend", "AND"));
-				isGreaterThan.setAttribute(makeAttribute("compareValue", "0"));
-				isGreaterThan.addContent("\n\t\t\t\t" + table.getColumnInfoList().get(i).getName() + " = #" + classFile.getPropertyList().get(i).getName() + "#\n\t\t\t");
-				dynamic.addContent(isGreaterThan);
-			} else {
-				isNotEmpty = new Element("isNotEmpty");
-				isNotEmpty.setAttribute(makeAttribute("property", classFile.getPropertyList().get(i).getName()));
-				isNotEmpty.setAttribute(makeAttribute("prepend", "AND"));
-				isNotEmpty.addContent("\n\t\t\t\t" + table.getColumnInfoList().get(i).getName() + " = #" + classFile.getPropertyList().get(i).getName() + "#\n\t\t\t");
-				dynamic.addContent(isNotEmpty);
-			}
-		}
-		
-		return dynamic;
-	}
-	
-	/**
-	 * PK Á¶°ÇÀ¸·Î ÀÌ·ïÁø WHEREÀı »ı¼º
-	 * @param tableName
-	 * @return
-	 */
-	private String makePrimaryKeyWhere(TableInfo table, ClassFileInfo classFile) {
+        for (int i = 0; i < classFile.getPropertyList().size(); i++) {
 
-		List<String> primaryKeyColumnNameList = table.getPrimaryKeyColumnNameList();
-		List<String> propertyPrimaryKeyNameList = classFile.getPropertyPrimaryKeyNameList();
-		
-		String sql = "\n\t\t" + "WHERE";
+            if ("INT".equals(table.getColumnInfoList().get(i).getType().toUpperCase())) {
+                isGreaterThan = new Element("isGreaterThan");
+                isGreaterThan.setAttribute(makeAttribute("property", classFile.getPropertyList().get(i).getName()));
+                isGreaterThan.setAttribute(makeAttribute("prepend", "AND"));
+                isGreaterThan.setAttribute(makeAttribute("compareValue", "0"));
+                isGreaterThan.addContent("\n\t\t\t\t" + table.getColumnInfoList().get(i).getName() + " = #" + classFile.getPropertyList().get(i).getName() + "#\n\t\t\t");
+                dynamic.addContent(isGreaterThan);
+            } else {
+                isNotEmpty = new Element("isNotEmpty");
+                isNotEmpty.setAttribute(makeAttribute("property", classFile.getPropertyList().get(i).getName()));
+                isNotEmpty.setAttribute(makeAttribute("prepend", "AND"));
+                isNotEmpty.addContent("\n\t\t\t\t" + table.getColumnInfoList().get(i).getName() + " = #" + classFile.getPropertyList().get(i).getName() + "#\n\t\t\t");
+                dynamic.addContent(isNotEmpty);
+            }
+        }
 
-		for (int i = 0; i < primaryKeyColumnNameList.size(); i++) {
-			if (i == 0) {
-				sql = sql + "\n\t\t\t" + primaryKeyColumnNameList.get(i) + " = #" + propertyPrimaryKeyNameList.get(i) + "#";
-			} else {
-				sql = sql + "\n\t\t\t" + "AND " + primaryKeyColumnNameList.get(i) + " = #" + propertyPrimaryKeyNameList.get(i) + "#";
-			}
-		}
-		sql += "\n\t";
-		return sql;
-	}
-	
+        return dynamic;
+    }
 
-	/**
-	 * »ı¼ºÇÑ WHEREÀı Ãß°¡
-	 * @param tableName
-	 * @return
-	 */
-	private Element addDynamicWhere(String tableName) {
-		Element include = new Element("include");
-		include.setAttribute(makeAttribute("refid", "dynamicWhere"));
-		return include;
-	}
-	
-	/** insert Äõ¸®¹® ÀÛ¼º */
-	private String makeInsertSqlMap(TableInfo table, ClassFileInfo classFile) {
-		String sql = "\n\t\tINSERT INTO " + table.getName() + " ( ";
-		for (int i = 0; i < classFile.getPropertyList().size(); i++) {
-			if (i == 0) {
-				sql = sql + "\n\t\t\t" + table.getColumnInfoList().get(i).getName();
-			} else {
-				sql = sql + "\n\t\t\t" + "," + table.getColumnInfoList().get(i).getName();
-			}
-		}
-		sql += "\n\t\t) VALUES (";
-		for (int i = 0; i < classFile.getPropertyList().size(); i++) {
-			if (i == 0) {
-				sql = sql + "\n\t\t\t#" + classFile.getPropertyList().get(i).getName() + "# ";
-			} else {
-				sql = sql + "\n\t\t\t," + "#" + classFile.getPropertyList().get(i).getName() + "# ";
-			}
-		}
-		sql += "\n\t\t);\n\t";
-		return sql;
-	}
-	
-	/** select Äõ¸®¹® ÀÛ¼º */
-	private String makeSelectSqlMap(TableInfo table, ClassFileInfo classFile) {
-		String sql = "\n\t\tSELECT ";
-		for (int i = 0; i < classFile.getPropertyList().size(); i++) {
-			if (i == 0) {
-				sql = sql + "\n\t\t\t" + table.getColumnInfoList().get(i).getName() + "\tAS " + classFile.getPropertyList().get(i).getName();
-			} else {
-				sql = sql + "\n\t\t\t" + "," + table.getColumnInfoList().get(i).getName() + "\tAS " + classFile.getPropertyList().get(i).getName();
-			}
-		}
-		sql = sql + "\n\t\tFROM " + table.getName() + "\n\t\t";
-		return sql;
-	}
-	
-	/** update Äõ¸®¹® ÀÛ¼º */
-	@SuppressWarnings("unused")
-	private String makeUpdateSqlMap(TableInfo table, ClassFileInfo classFile) {
-		String sql = "\n\t\tUPDATE " + table.getName() + " \n\t\tSET";
-		for (int i = 0; i < classFile.getPropertyList().size(); i++) {
-			if (i == 0) {
-				sql = sql + "\n\t\t\t" + table.getColumnInfoList().get(i).getName() + " = " + "#" + classFile.getPropertyList().get(i).getName() + "# ";
-			} else {
-				sql = sql + "\n\t\t\t" + "," + table.getColumnInfoList().get(i).getName() + " = " + "#" + classFile.getPropertyList().get(i).getName() + "# ";
-			}
-		}
-		sql += "\n\t\t";
-		return sql;
-	}
-	
-	/**
-	 * update Äõ¸®¹® Çì´õ
-	 * @param tableName
-	 * @return
-	 */
-	private String makeUpdateSqlMapHead(String tableName) {
-		String sql = "\n\t\tUPDATE " + tableName + " \n\t\tSET";
-		return sql;
-	}
-	
-	/**
-	 * µ¿Àû update Äõ¸®¹® ÀÛ¼º 
-	 * ¿¹) <isNotEmpty property="applyName">,APPLY_NAME = #applyName# </isNotEmpty>
-	 * 
-	 * prepend ¸¦ »ç¿ëÇÏÁö ¾Ê´Â °ÍÀ¸·Î ¼öÁ¤
-	 * @param tableName
-	 * @return
-	 */
-	private Element makeDynamicUpdateSqlMap(TableInfo table, ClassFileInfo classFile) {
-		
-		Element dynamic = new Element("dynamic");
-		Element isNotEmpty = null;
-		Element isGreaterThan = null;
+    /**
+     * PK ì¡°ê±´ìœ¼ë¡œ ì´ë¤„ì§„ WHEREì ˆ ìƒì„±
+     * @param tableName
+     * @return
+     */
+    private String makePrimaryKeyWhere(TableInfo table, ClassFileInfo classFile) {
 
-		for (int i = 0; i < classFile.getPropertyList().size(); i++) {
-			
-			if ("INT".equals(table.getColumnInfoList().get(i).getType().toUpperCase())) {
-				isGreaterThan = new Element("isGreaterThan");
-				isGreaterThan.setAttribute(makeAttribute("property", classFile.getPropertyList().get(i).getName()));
+        List<String> primaryKeyColumnNameList = table.getPrimaryKeyColumnNameList();
+        List<String> propertyPrimaryKeyNameList = classFile.getPropertyPrimaryKeyNameList();
+
+        String sql = "\n\t\t" + "WHERE";
+
+        for (int i = 0; i < primaryKeyColumnNameList.size(); i++) {
+            if (i == 0) {
+                sql = sql + "\n\t\t\t" + primaryKeyColumnNameList.get(i) + " = #" + propertyPrimaryKeyNameList.get(i) + "#";
+            } else {
+                sql = sql + "\n\t\t\t" + "AND " + primaryKeyColumnNameList.get(i) + " = #" + propertyPrimaryKeyNameList.get(i) + "#";
+            }
+        }
+        sql += "\n\t";
+        return sql;
+    }
+
+
+    /**
+     * ìƒì„±í•œ WHEREì ˆ ì¶”ê°€
+     * @param tableName
+     * @return
+     */
+    private Element addDynamicWhere(String tableName) {
+        Element include = new Element("include");
+        include.setAttribute(makeAttribute("refid", "dynamicWhere"));
+        return include;
+    }
+
+    /** insert ì¿¼ë¦¬ë¬¸ ì‘ì„± */
+    private String makeInsertSqlMap(TableInfo table, ClassFileInfo classFile) {
+        String sql = "\n\t\tINSERT INTO " + table.getName() + " ( ";
+        for (int i = 0; i < classFile.getPropertyList().size(); i++) {
+            if (i == 0) {
+                sql = sql + "\n\t\t\t" + table.getColumnInfoList().get(i).getName();
+            } else {
+                sql = sql + "\n\t\t\t" + "," + table.getColumnInfoList().get(i).getName();
+            }
+        }
+        sql += "\n\t\t) VALUES (";
+        for (int i = 0; i < classFile.getPropertyList().size(); i++) {
+            if (i == 0) {
+                sql = sql + "\n\t\t\t#" + classFile.getPropertyList().get(i).getName() + "# ";
+            } else {
+                sql = sql + "\n\t\t\t," + "#" + classFile.getPropertyList().get(i).getName() + "# ";
+            }
+        }
+        sql += "\n\t\t);\n\t";
+        return sql;
+    }
+
+    /** select ì¿¼ë¦¬ë¬¸ ì‘ì„± */
+    private String makeSelectSqlMap(TableInfo table, ClassFileInfo classFile) {
+        String sql = "\n\t\tSELECT ";
+        for (int i = 0; i < classFile.getPropertyList().size(); i++) {
+            if (i == 0) {
+                sql = sql + "\n\t\t\t" + table.getColumnInfoList().get(i).getName() + "\tAS " + classFile.getPropertyList().get(i).getName();
+            } else {
+                sql = sql + "\n\t\t\t" + "," + table.getColumnInfoList().get(i).getName() + "\tAS " + classFile.getPropertyList().get(i).getName();
+            }
+        }
+        sql = sql + "\n\t\tFROM " + table.getName() + "\n\t\t";
+        return sql;
+    }
+
+    /** update ì¿¼ë¦¬ë¬¸ ì‘ì„± */
+    @SuppressWarnings("unused")
+    private String makeUpdateSqlMap(TableInfo table, ClassFileInfo classFile) {
+        String sql = "\n\t\tUPDATE " + table.getName() + " \n\t\tSET";
+        for (int i = 0; i < classFile.getPropertyList().size(); i++) {
+            if (i == 0) {
+                sql = sql + "\n\t\t\t" + table.getColumnInfoList().get(i).getName() + " = " + "#" + classFile.getPropertyList().get(i).getName() + "# ";
+            } else {
+                sql = sql + "\n\t\t\t" + "," + table.getColumnInfoList().get(i).getName() + " = " + "#" + classFile.getPropertyList().get(i).getName() + "# ";
+            }
+        }
+        sql += "\n\t\t";
+        return sql;
+    }
+
+    /**
+     * update ì¿¼ë¦¬ë¬¸ í—¤ë”
+     * @param tableName
+     * @return
+     */
+    private String makeUpdateSqlMapHead(String tableName) {
+        String sql = "\n\t\tUPDATE " + tableName + " \n\t\tSET";
+        return sql;
+    }
+
+    /**
+     * ë™ì  update ì¿¼ë¦¬ë¬¸ ì‘ì„±
+     * ì˜ˆ) <isNotEmpty property="applyName">,APPLY_NAME = #applyName# </isNotEmpty>
+     *
+     * prepend ë¥¼ ì‚¬ìš©í•˜ì§€ ì•ŠëŠ” ê²ƒìœ¼ë¡œ ìˆ˜ì •
+     * @param tableName
+     * @return
+     */
+    private Element makeDynamicUpdateSqlMap(TableInfo table, ClassFileInfo classFile) {
+
+        Element dynamic = new Element("dynamic");
+        Element isNotEmpty = null;
+        Element isGreaterThan = null;
+
+        for (int i = 0; i < classFile.getPropertyList().size(); i++) {
+
+            if ("INT".equals(table.getColumnInfoList().get(i).getType().toUpperCase())) {
+                isGreaterThan = new Element("isGreaterThan");
+                isGreaterThan.setAttribute(makeAttribute("property", classFile.getPropertyList().get(i).getName()));
 //				isGreaterThan.setAttribute(makeAttribute("prepend", ","));
-				isGreaterThan.setAttribute(makeAttribute("compareValue", "0"));
-				isGreaterThan.addContent("\n\t\t\t\t, " + table.getColumnInfoList().get(i).getName() + " = #" + classFile.getPropertyList().get(i).getName() + "#\n\t\t\t");
-				dynamic.addContent(isGreaterThan);
-			} else {
-				isNotEmpty = new Element("isNotEmpty");
-				isNotEmpty.setAttribute(makeAttribute("property", classFile.getPropertyList().get(i).getName()));
+                isGreaterThan.setAttribute(makeAttribute("compareValue", "0"));
+                isGreaterThan.addContent("\n\t\t\t\t, " + table.getColumnInfoList().get(i).getName() + " = #" + classFile.getPropertyList().get(i).getName() + "#\n\t\t\t");
+                dynamic.addContent(isGreaterThan);
+            } else {
+                isNotEmpty = new Element("isNotEmpty");
+                isNotEmpty.setAttribute(makeAttribute("property", classFile.getPropertyList().get(i).getName()));
 //				isNotEmpty.setAttribute(makeAttribute("prepend", ","));
-				isNotEmpty.addContent("\n\t\t\t\t, " + table.getColumnInfoList().get(i).getName() + " = #" + classFile.getPropertyList().get(i).getName() + "#\n\t\t\t");
-				dynamic.addContent(isNotEmpty);
-			}
-			
-		}
-		
-		return dynamic;
-	}
-	
-	/** delete Äõ¸®¹® ÀÛ¼º */
-	private String makeDeleteSqlMap(String tableName) {
-		String sql = "\n\t\tDELETE FROM " + tableName + "\n\t\t";
-		return sql;
-	}
-	
-	/**
-	 * Attribute ¸¦ »ı¼ºÇÏ¿© ¹İÈ¯ÇÑ´Ù.
-	 * 
-	 * @param attributeName
-	 * @param attributeValue
-	 * @return
-	 */
-	private Attribute makeAttribute(String attributeName, String attributeValue) {
-		Attribute attribute = new Attribute(attributeName, attributeValue); 
-		return attribute;
-	}
-	
-	
+                isNotEmpty.addContent("\n\t\t\t\t, " + table.getColumnInfoList().get(i).getName() + " = #" + classFile.getPropertyList().get(i).getName() + "#\n\t\t\t");
+                dynamic.addContent(isNotEmpty);
+            }
+
+        }
+
+        return dynamic;
+    }
+
+    /** delete ì¿¼ë¦¬ë¬¸ ì‘ì„± */
+    private String makeDeleteSqlMap(String tableName) {
+        String sql = "\n\t\tDELETE FROM " + tableName + "\n\t\t";
+        return sql;
+    }
+
+    /**
+     * Attribute ë¥¼ ìƒì„±í•˜ì—¬ ë°˜í™˜í•œë‹¤.
+     *
+     * @param attributeName
+     * @param attributeValue
+     * @return
+     */
+    private Attribute makeAttribute(String attributeName, String attributeValue) {
+        Attribute attribute = new Attribute(attributeName, attributeValue);
+        return attribute;
+    }
+
+
 }

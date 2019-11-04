@@ -14,148 +14,148 @@ import org.apache.log4j.Logger;
 import smallwheel.mybro.support.builder.DtoClassBuilder;
 
 /**
- * Å×ÀÌºí Á¤º¸ ¸Ş¸ğ¸® Å¬·¡½º
- * 
+ * í…Œì´ë¸” ì •ë³´ ë©”ëª¨ë¦¬ í´ë˜ìŠ¤
+ *
  * <pre>
- * DB¿¡¼­ Å×ÀÌºí Á¤º¸¸¦ Á¶È¸ÇÏ¿© ¸Ş¸ğ¸®¿¡ ÀúÀå
+ * DBì—ì„œ í…Œì´ë¸” ì •ë³´ë¥¼ ì¡°íšŒí•˜ì—¬ ë©”ëª¨ë¦¬ì— ì €ì¥
  * </pre>
- * 
+ *
  * @author yeonhooo@gmail.com
  */
 public class SharedInfo {
-	private final Logger logger = Logger.getLogger(DtoClassBuilder.class);
+    private final Logger logger = Logger.getLogger(DtoClassBuilder.class);
 
-	private static SharedInfo sharedInfo = new SharedInfo();
-	private List<TableInfo> tableInfoList = new ArrayList<>();
-	private List<ClassFileInfo> classFileInfoList = new ArrayList<>();
-	private List<MapperInterfaceInfo> mapperInterfaceInfoList = new ArrayList<>();
+    private static SharedInfo sharedInfo = new SharedInfo();
+    private List<TableInfo> tableInfoList = new ArrayList<>();
+    private List<ClassFileInfo> classFileInfoList = new ArrayList<>();
+    private List<MapperInterfaceInfo> mapperInterfaceInfoList = new ArrayList<>();
 
-	// Å×ÀÌºí Á¤º¸ °ü·Ã º¯¼ö
-	private final String tables = ContextMaster.getString("TABLES");
+    // í…Œì´ë¸” ì •ë³´ ê´€ë ¨ ë³€ìˆ˜
+    private final String tables = ContextMaster.getString("TABLES");
 
-	// singleton
-	private SharedInfo() {
-	}
+    // singleton
+    private SharedInfo() {
+    }
 
-	public static SharedInfo getInstance() {
-		return sharedInfo;
-	}
+    public static SharedInfo getInstance() {
+        return sharedInfo;
+    }
 
-	public void load() {
+    public void load() {
 
-		// DB ¿¬µ¿
-		DBManager dbm = new DBManager();
-		dbm.checkConnection(ENV.dbms);
-		Connection con = dbm.getConnection(ENV.dbms);
-		PreparedStatement pstmt;
-		DatabaseMetaData databaseMetaData;
-		ResultSet rs;
-		ResultSetMetaData rm;
+        // DB ì—°ë™
+        DBManager dbm = new DBManager();
+        dbm.checkConnection(ENV.dbms);
+        Connection con = dbm.getConnection(ENV.dbms);
+        PreparedStatement pstmt;
+        DatabaseMetaData databaseMetaData;
+        ResultSet rs;
+        ResultSetMetaData rm;
 
-		try {
-			for (String tableName : tables.split(",")) {
+        try {
+            for (String tableName : tables.split(",")) {
 
-				tableName = tableName.trim();
-				TableInfo tableInfo = new TableInfo();
-				ClassFileInfo classInfo = new ClassFileInfo();
-				tableInfo.setName(tableName);
+                tableName = tableName.trim();
+                TableInfo tableInfo = new TableInfo();
+                ClassFileInfo classInfo = new ClassFileInfo();
+                tableInfo.setName(tableName);
 
-				pstmt = con.prepareStatement("select * from " + tableInfo.getName() + " where 1=0");
-				databaseMetaData = con.getMetaData();
-				rs = pstmt.executeQuery();
-				rm = rs.getMetaData();
+                pstmt = con.prepareStatement("select * from " + tableInfo.getName() + " where 1=0");
+                databaseMetaData = con.getMetaData();
+                rs = pstmt.executeQuery();
+                rm = rs.getMetaData();
 
-				// TableÀÇ Column Á¤º¸¸¦ °¡Á®¿Â´Ù.
-				for (int i = 1; i <= rm.getColumnCount(); i++) {
-					tableInfo.getColumnInfoList().add(new ColumnInfo(rm.getColumnName(i), rm.getColumnTypeName(i)));
-				}
+                // Tableì˜ Column ì •ë³´ë¥¼ ê°€ì ¸ì˜¨ë‹¤.
+                for (int i = 1; i <= rm.getColumnCount(); i++) {
+                    tableInfo.getColumnInfoList().add(new ColumnInfo(rm.getColumnName(i), rm.getColumnTypeName(i)));
+                }
 
-				// TableÀÇ PK Á¤º¸¸¦ °¡Á®¿Â´Ù.
-				ResultSet keys = databaseMetaData.getPrimaryKeys(null, null, tableInfo.getName());
-				while (keys.next()) {
-					tableInfo.getPrimaryKeyColumnNameList().add(keys.getString("COLUMN_NAME"));
-					classInfo.getPropertyPrimaryKeyNameList().add(makePropertyName(keys.getString("COLUMN_NAME")));
-				}
+                // Tableì˜ PK ì •ë³´ë¥¼ ê°€ì ¸ì˜¨ë‹¤.
+                ResultSet keys = databaseMetaData.getPrimaryKeys(null, null, tableInfo.getName());
+                while (keys.next()) {
+                    tableInfo.getPrimaryKeyColumnNameList().add(keys.getString("COLUMN_NAME"));
+                    classInfo.getPropertyPrimaryKeyNameList().add(makePropertyName(keys.getString("COLUMN_NAME")));
+                }
 
-				logger.info("[Table Name: " + tableInfo.getName() + " / Column Count: " + rm.getColumnCount() + "]");
-				logger.info("PK Columns");
-				for (String key : tableInfo.getPrimaryKeyColumnNameList()) {
-					logger.info("\t" + key);
-				}
+                logger.info("[Table Name: " + tableInfo.getName() + " / Column Count: " + rm.getColumnCount() + "]");
+                logger.info("PK Columns");
+                for (String key : tableInfo.getPrimaryKeyColumnNameList()) {
+                    logger.info("\t" + key);
+                }
 
-				// EntityName À» ¸¸µç´Ù
-				tableInfo.setEntityName(makeEntityName(tableInfo.getName(), ENV.prefixExcept));
+                // EntityName ì„ ë§Œë“ ë‹¤
+                tableInfo.setEntityName(makeEntityName(tableInfo.getName(), ENV.prefixExcept));
 
-				// ClassName À» ¸¸µç´Ù.
-				classInfo.setName(makeClassName(tableInfo.getEntityName()));
+                // ClassName ì„ ë§Œë“ ë‹¤.
+                classInfo.setName(makeClassName(tableInfo.getEntityName()));
 
-				for (int i = 0; i < rm.getColumnCount(); i++) {
-					classInfo.getPropertyList().add(
-							new PropertyInfo(makePropertyName(tableInfo.getColumnInfoList().get(i).getName()), makePropertyType(tableInfo
-									.getColumnInfoList().get(i).getType())));
-				}
+                for (int i = 0; i < rm.getColumnCount(); i++) {
+                    classInfo.getPropertyList().add(
+                            new PropertyInfo(makePropertyName(tableInfo.getColumnInfoList().get(i).getName()), makePropertyType(tableInfo
+                                    .getColumnInfoList().get(i).getType())));
+                }
 
-				tableInfoList.add(tableInfo);
-				classFileInfoList.add(classInfo);
+                tableInfoList.add(tableInfo);
+                classFileInfoList.add(classInfo);
 
-				rs.close();
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
+                rs.close();
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
 
-	/**
-	 * ¿£Æ¼Æ¼¸íÀ» ¸¸µç´Ù.
-	 * 
-	 * @param prefixExcept ¿£Æ¼Æ¼¸í¿¡¼­ Á¦¿ÜÇÒ ¹®ÀÚ¿­
-	 */
-	private String makeEntityName(String tableName, String prefixExcept) {
+    /**
+     * ì—”í‹°í‹°ëª…ì„ ë§Œë“ ë‹¤.
+     *
+     * @param prefixExcept ì—”í‹°í‹°ëª…ì—ì„œ ì œì™¸í•  ë¬¸ìì—´
+     */
+    private String makeEntityName(String tableName, String prefixExcept) {
 
-		// prefixExceptÀ» ¿£Æ¼Æ¼¸í¿¡¼­ Á¦¿ÜÇÑ´Ù.
-		tableName = tableName.replaceAll(prefixExcept, "");
-		tableName = tableName.toLowerCase(Locale.ENGLISH);
+        // prefixExceptì„ ì—”í‹°í‹°ëª…ì—ì„œ ì œì™¸í•œë‹¤.
+        tableName = tableName.replaceAll(prefixExcept, "");
+        tableName = tableName.toLowerCase(Locale.ENGLISH);
 
-		while (true) {
-			if (tableName.indexOf("_") > -1) {
-				tableName = (tableName.substring(0, tableName.indexOf("_"))
-						+ tableName.substring(tableName.indexOf("_") + 1, tableName.indexOf("_") + 2).toUpperCase() + tableName
-						.substring(tableName.indexOf("_") + 2)).trim();
-			} else {
-				break;
-			}
-		}
+        while (true) {
+            if (tableName.indexOf("_") > -1) {
+                tableName = (tableName.substring(0, tableName.indexOf("_"))
+                        + tableName.substring(tableName.indexOf("_") + 1, tableName.indexOf("_") + 2).toUpperCase() + tableName
+                        .substring(tableName.indexOf("_") + 2)).trim();
+            } else {
+                break;
+            }
+        }
 
-		// Ã¹ ±ÛÀÚ¸¦ ´ë¹®ÀÚ·Î ½ÃÀÛÇÑ´Ù.
-		tableName = tableName.substring(0, 1).toUpperCase() + tableName.substring(1);
-		return tableName;
-	}
+        // ì²« ê¸€ìë¥¼ ëŒ€ë¬¸ìë¡œ ì‹œì‘í•œë‹¤.
+        tableName = tableName.substring(0, 1).toUpperCase() + tableName.substring(1);
+        return tableName;
+    }
 
-	/** Å¬·¡½º¸íÀ» ¸¸µç´Ù. */
-	private String makeClassName(String entityName) {
-		return entityName + ENV.classNameSuffix;
-	}
+    /** í´ë˜ìŠ¤ëª…ì„ ë§Œë“ ë‹¤. */
+    private String makeClassName(String entityName) {
+        return entityName + ENV.classNameSuffix;
+    }
 
-	/**
-	 * Å¬·¡½º³»ÀÇ ÇÁ·ÎÆÛÆ¼¸í(property)À» ¸¸µç´Ù.
-	 * 
-	 * @param º¯È¯ µÉ ½ÇÁ¦ DB ÄÃ·³¸í
-	 * @return º¯È¯ µÈ ÇÁ·ÎÆÛÆ¼¸í(DB ÄÃ·³¸í°ú ¸ÅÄª)
-	 * */
-	private String makePropertyName(String columnName) {
-		columnName = columnName.toLowerCase(Locale.ENGLISH);
+    /**
+     * í´ë˜ìŠ¤ë‚´ì˜ í”„ë¡œí¼í‹°ëª…(property)ì„ ë§Œë“ ë‹¤.
+     *
+     * @param ë³€í™˜ ë  ì‹¤ì œ DB ì»¬ëŸ¼ëª…
+     * @return ë³€í™˜ ëœ í”„ë¡œí¼í‹°ëª…(DB ì»¬ëŸ¼ëª…ê³¼ ë§¤ì¹­)
+     * */
+    private String makePropertyName(String columnName) {
+        columnName = columnName.toLowerCase(Locale.ENGLISH);
 
-		while (true) {
-			if (columnName.indexOf("_") > -1) {
-				columnName = (columnName.substring(0, columnName.indexOf("_"))
-						+ columnName.substring(columnName.indexOf("_") + 1, columnName.indexOf("_") + 2).toUpperCase() + columnName
-						.substring(columnName.indexOf("_") + 2)).trim();
-			} else {
-				break;
-			}
-		}
+        while (true) {
+            if (columnName.indexOf("_") > -1) {
+                columnName = (columnName.substring(0, columnName.indexOf("_"))
+                        + columnName.substring(columnName.indexOf("_") + 1, columnName.indexOf("_") + 2).toUpperCase() + columnName
+                        .substring(columnName.indexOf("_") + 2)).trim();
+            } else {
+                break;
+            }
+        }
 
-//		// º¯°æµÈ ÇÁ·ÎÆÛÆ¼¸íÀÌ ÀÚ¹Ù ¿¹¾à¾îÀÌ°Å³ª, ºñÁ¤»óÀûÀÏ °æ¿ì¿¡ ´ëÇÑ Ã³¸®		
+//		// ë³€ê²½ëœ í”„ë¡œí¼í‹°ëª…ì´ ìë°” ì˜ˆì•½ì–´ì´ê±°ë‚˜, ë¹„ì •ìƒì ì¼ ê²½ìš°ì— ëŒ€í•œ ì²˜ë¦¬		
 //		if (columnName.equals("continue")) {
 //			columnName = "continues";
 //		} else if (columnName.equals("r")) {
@@ -170,81 +170,81 @@ public class SharedInfo {
 //			columnName = "save";
 //		}
 
-		return columnName;
-	}
+        return columnName;
+    }
 
-	/**
-	 * È¯°æ ¼³Á¤ ÆÄÀÏ¿¡ ¼³Á¤µÈ °áÇÕµµ¿¡ µû¶ó Å¬·¡½ºÀÇ ÇÁ·ÎÆÛÆ¼ Å¸ÀÔÀ» ¸¸µç´Ù.<br />
-	 * <br />
-	 * <strong>°áÇÕµµ Å¸ÀÔ</strong><br />
-	 * 
-	 * °­ÇÔ(<code>HIGH</code>): DB¿Í µ¿ÀÏÇÑ Å¸ÀÔÀÇ ÀÚ¹Ù ÇÁ·ÎÆÛÆ¼ Å¸ÀÔ ¹İÈ¯<br />
-	 * º¸Åë(<code>MIDDLE</code>): DB Å¸ÀÔ Áß ¼ıÀÚÇü°ú ³¯Â¥Çü¸¸ º¯°æ. ±× ¿Ü Å¸ÀÔÀº ¹®ÀÚ¿­ Å¸ÀÔÀ¸·Î º¯È¯<br />
-	 * ¾àÇÔ(<code>LOW</code>): DB Å¸ÀÔ Áß ¼ıÀÚÇü¸¸ º¯È¯. ±× ¿Ü Å¸ÀÔÀº ¹®ÀÚ¿­ Å¸ÀÔÀ¸·Î º¯È¯<br />
-	 * ¾øÀ½(<code>NO</code>): ¸ğµç DB Å¸ÀÔÀ» ¹®ÀÚ¿­ Å¸ÀÔÀ¸·Î º¯È¯
-	 * 
-	 * @param º¯È¯ µÉ ½ÇÁ¦ DB ÄÃ·³ Å¸ÀÔ
-	 * @return º¯È¯ µÈ ÇÁ·ÎÆÛÆ¼ Å¸ÀÔ(DB ÄÃ·³ Å¸ÀÔ°ú ¸ÅÄª)
-	 * */
-	private String makePropertyType(String columnType) {
-		String propertyType = columnType.toUpperCase();
+    /**
+     * í™˜ê²½ ì„¤ì • íŒŒì¼ì— ì„¤ì •ëœ ê²°í•©ë„ì— ë”°ë¼ í´ë˜ìŠ¤ì˜ í”„ë¡œí¼í‹° íƒ€ì…ì„ ë§Œë“ ë‹¤.<br />
+     * <br />
+     * <strong>ê²°í•©ë„ íƒ€ì…</strong><br />
+     *
+     * ê°•í•¨(<code>HIGH</code>): DBì™€ ë™ì¼í•œ íƒ€ì…ì˜ ìë°” í”„ë¡œí¼í‹° íƒ€ì… ë°˜í™˜<br />
+     * ë³´í†µ(<code>MIDDLE</code>): DB íƒ€ì… ì¤‘ ìˆ«ìí˜•ê³¼ ë‚ ì§œí˜•ë§Œ ë³€ê²½. ê·¸ ì™¸ íƒ€ì…ì€ ë¬¸ìì—´ íƒ€ì…ìœ¼ë¡œ ë³€í™˜<br />
+     * ì•½í•¨(<code>LOW</code>): DB íƒ€ì… ì¤‘ ìˆ«ìí˜•ë§Œ ë³€í™˜. ê·¸ ì™¸ íƒ€ì…ì€ ë¬¸ìì—´ íƒ€ì…ìœ¼ë¡œ ë³€í™˜<br />
+     * ì—†ìŒ(<code>NO</code>): ëª¨ë“  DB íƒ€ì…ì„ ë¬¸ìì—´ íƒ€ì…ìœ¼ë¡œ ë³€í™˜
+     *
+     * @param ë³€í™˜ ë  ì‹¤ì œ DB ì»¬ëŸ¼ íƒ€ì…
+     * @return ë³€í™˜ ëœ í”„ë¡œí¼í‹° íƒ€ì…(DB ì»¬ëŸ¼ íƒ€ì…ê³¼ ë§¤ì¹­)
+     * */
+    private String makePropertyType(String columnType) {
+        String propertyType = columnType.toUpperCase();
 
-		if ("HIGH".equals(ENV.couplingType)) {
-			// °áÇÕµµ °­ÇÔ
-			if (propertyType.equals("TINYINT") || propertyType.equals("SMALLINT") || propertyType.equals("MEDIUMINT")
-					|| propertyType.equals("INT") || propertyType.equals("BIGINT")) {
-				propertyType = "int";
-			} else if (propertyType.equals("FLOAT")) {
-				propertyType = "float";
-			} else if (propertyType.equals("DOUBLE") || propertyType.equals("DECIMAL")) {
-				propertyType = "double";
-			} else if (propertyType.equals("CHAR") || propertyType.equals("VARCHAR") || propertyType.equals("TEXT")
-					|| propertyType.indexOf("BLOB") > -1) {
-				propertyType = "String";
-			} else if (propertyType.equals("DATE") || propertyType.equals("DATETIME") || propertyType.equals("TIMESTAMP")) {
-				propertyType = "Date";
-			} else {
-				propertyType = "String";
-			}
+        if ("HIGH".equals(ENV.couplingType)) {
+            // ê²°í•©ë„ ê°•í•¨
+            if (propertyType.equals("TINYINT") || propertyType.equals("SMALLINT") || propertyType.equals("MEDIUMINT")
+                    || propertyType.equals("INT") || propertyType.equals("BIGINT")) {
+                propertyType = "int";
+            } else if (propertyType.equals("FLOAT")) {
+                propertyType = "float";
+            } else if (propertyType.equals("DOUBLE") || propertyType.equals("DECIMAL")) {
+                propertyType = "double";
+            } else if (propertyType.equals("CHAR") || propertyType.equals("VARCHAR") || propertyType.equals("TEXT")
+                    || propertyType.indexOf("BLOB") > -1) {
+                propertyType = "String";
+            } else if (propertyType.equals("DATE") || propertyType.equals("DATETIME") || propertyType.equals("TIMESTAMP")) {
+                propertyType = "Date";
+            } else {
+                propertyType = "String";
+            }
 
-		} else if ("MIDDLE".equals(ENV.couplingType)) {
-			// °áÇÕµµ º¸Åë
-			if (propertyType.equals("TINYINT") || propertyType.equals("SMALLINT") || propertyType.equals("MEDIUMINT")
-					|| propertyType.equals("INT") || propertyType.equals("BIGINT")) {
-				propertyType = "int";
-			} else if (propertyType.equals("DATE") || propertyType.equals("DATETIME") || propertyType.equals("TIMESTAMP")) {
-				propertyType = "Date";
-			} else {
-				propertyType = "String";
-			}
+        } else if ("MIDDLE".equals(ENV.couplingType)) {
+            // ê²°í•©ë„ ë³´í†µ
+            if (propertyType.equals("TINYINT") || propertyType.equals("SMALLINT") || propertyType.equals("MEDIUMINT")
+                    || propertyType.equals("INT") || propertyType.equals("BIGINT")) {
+                propertyType = "int";
+            } else if (propertyType.equals("DATE") || propertyType.equals("DATETIME") || propertyType.equals("TIMESTAMP")) {
+                propertyType = "Date";
+            } else {
+                propertyType = "String";
+            }
 
-		} else if ("LOW".equals(ENV.couplingType)) {
-			// °áÇÕµµ ¾àÇÔ
-			if (propertyType.equals("TINYINT") || propertyType.equals("SMALLINT") || propertyType.equals("MEDIUMINT")
-					|| propertyType.equals("INT") || propertyType.equals("BIGINT")) {
-				propertyType = "int";
-			} else {
-				propertyType = "String";
-			}
+        } else if ("LOW".equals(ENV.couplingType)) {
+            // ê²°í•©ë„ ì•½í•¨
+            if (propertyType.equals("TINYINT") || propertyType.equals("SMALLINT") || propertyType.equals("MEDIUMINT")
+                    || propertyType.equals("INT") || propertyType.equals("BIGINT")) {
+                propertyType = "int";
+            } else {
+                propertyType = "String";
+            }
 
-		} else if ("NO".equals(ENV.couplingType)) {
-			// °áÇÕµµ ¾øÀ½
-			propertyType = "String";
-		}
+        } else if ("NO".equals(ENV.couplingType)) {
+            // ê²°í•©ë„ ì—†ìŒ
+            propertyType = "String";
+        }
 
-		return propertyType;
-	}
+        return propertyType;
+    }
 
-	public List<TableInfo> getTableInfoList() {
-		return tableInfoList;
-	}
+    public List<TableInfo> getTableInfoList() {
+        return tableInfoList;
+    }
 
-	public List<ClassFileInfo> getClassFileInfoList() {
-		return classFileInfoList;
-	}
+    public List<ClassFileInfo> getClassFileInfoList() {
+        return classFileInfoList;
+    }
 
-	public List<MapperInterfaceInfo> getMapperInterfaceInfoList() {
-		return mapperInterfaceInfoList;
-	}
+    public List<MapperInterfaceInfo> getMapperInterfaceInfoList() {
+        return mapperInterfaceInfoList;
+    }
 
 }

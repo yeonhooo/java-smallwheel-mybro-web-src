@@ -9,56 +9,56 @@ import smallwheel.mybro.support.builder.MapperInterfaceBuilder;
 import smallwheel.mybro.support.builder.SqlMapperBuilder;
 
 /**
- * MyBro ¸ŞÀÎ Å¬·¡½º
- * 
- * TODO: DB Connection °ü¸® ==> Connection Pool
- * TODO: ÆĞÅ°Áö °æ·Î Á¤º¸ ÀÔ·Â¹Ş¾Æ, ÆĞÅ°Áö »ı¼º ¹× ÇØ´ç ÆĞÅ°Áö °æ·Î¿¡ ÆÄÀÏ Ãß°¡
- * TODO: Mapper.java ÆÄÀÏ »ı¼º ±â´É 
+ * MyBro ë©”ì¸ í´ë˜ìŠ¤
+ *
+ * TODO: DB Connection ê´€ë¦¬ ==> Connection Pool
+ * TODO: íŒ¨í‚¤ì§€ ê²½ë¡œ ì •ë³´ ì…ë ¥ë°›ì•„, íŒ¨í‚¤ì§€ ìƒì„± ë° í•´ë‹¹ íŒ¨í‚¤ì§€ ê²½ë¡œì— íŒŒì¼ ì¶”ê°€
+ * TODO: Mapper.java íŒŒì¼ ìƒì„± ê¸°ëŠ¥ 
  *
  * @author yeonhooo@gmail.com
  */
 public class MyBroMain {
-	
-	private final static Logger LOGGER = Logger.getLogger(MyBroMain.class);
-	
-	private DtoClassBuilder dtoClassBuilder;
-	private SqlMapperBuilder sqlMapperBuilder;
-	private MapperInterfaceBuilder mapperInterfaceBuilder;
 
-	public static void main(String[] args) {
-		MyBroMain main = new MyBroMain();
-		main.run();
-	}
+    private final static Logger LOGGER = Logger.getLogger(MyBroMain.class);
 
-	private void init() {
-		// È¯°æÃÊ±âÈ­ , È¯°æÆÄÀÏ¿¡¼­ º¯¼ö°ª ·Îµù
-		ENV.init();
-		
-		// dtoClassBuilder »ı¼º
-		dtoClassBuilder = new DtoClassBuilder();
-		
-		// Å¸ÀÔº°(ibatis, mybatis) sqlMapperBuilder »ı¼º
-		SqlMapperBuilderFactory factory = new SqlMapperBuilderFactory();
-		sqlMapperBuilder = factory.createSqlMapperBuilder(ENV.mapperType);
-		
-		// mapperInterfaceBuilder »ı¼º
-		mapperInterfaceBuilder = new MapperInterfaceBuilder();
-	}
+    private DtoClassBuilder dtoClassBuilder;
+    private SqlMapperBuilder sqlMapperBuilder;
+    private MapperInterfaceBuilder mapperInterfaceBuilder;
 
-	private void run() {
-		
-		init();
-		SharedInfo.getInstance().load();
+    public static void main(String[] args) {
+        MyBroMain main = new MyBroMain();
+        main.run();
+    }
 
-		// step1. ¸ğµ¨ Å¬·¡½º ÆÄÀÏÀ» »ı¼ºÇÑ´Ù.
-		dtoClassBuilder.build();
-		
-		// step2. SqlMap.xml ÆÄÀÏÀ» »ı¼ºÇÑ´Ù.
-		sqlMapperBuilder.build();
-		
-		// step3. mapper interface ÆÄÀÏÀ» »ı¼ºÇÑ´Ù.
-		mapperInterfaceBuilder.build();
-		
-		LOGGER.info("### " + SharedInfo.getInstance().getTableInfoList().size() + "°³ Å×ÀÌºí¿¡ ´ëÇÑ ÀÛ¾÷ÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù." );
-	}
+    private void init() {
+        // í™˜ê²½ì´ˆê¸°í™” , í™˜ê²½íŒŒì¼ì—ì„œ ë³€ìˆ˜ê°’ ë¡œë”©
+        ENV.init();
+
+        // dtoClassBuilder ìƒì„±
+        dtoClassBuilder = new DtoClassBuilder();
+
+        // íƒ€ì…ë³„(ibatis, mybatis) sqlMapperBuilder ìƒì„±
+        SqlMapperBuilderFactory factory = new SqlMapperBuilderFactory();
+        sqlMapperBuilder = factory.createSqlMapperBuilder(ENV.mapperType);
+
+        // mapperInterfaceBuilder ìƒì„±
+        mapperInterfaceBuilder = new MapperInterfaceBuilder();
+    }
+
+    private void run() {
+
+        init();
+        SharedInfo.getInstance().load();
+
+        // step1. ëª¨ë¸ í´ë˜ìŠ¤ íŒŒì¼ì„ ìƒì„±í•œë‹¤.
+        dtoClassBuilder.build();
+
+        // step2. SqlMap.xml íŒŒì¼ì„ ìƒì„±í•œë‹¤.
+        sqlMapperBuilder.build();
+
+        // step3. mapper interface íŒŒì¼ì„ ìƒì„±í•œë‹¤.
+        mapperInterfaceBuilder.build();
+
+        LOGGER.info("### " + SharedInfo.getInstance().getTableInfoList().size() + "ê°œ í…Œì´ë¸”ì— ëŒ€í•œ ì‘ì—…ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤." );
+    }
 }
