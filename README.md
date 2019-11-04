@@ -42,7 +42,7 @@ mybatis 및 ibatis를 사용하는 프로젝트 초기에 반드시 거쳐야하
 덧1) 2011년부터 개인적으로 작성해서 사용하다가; 소스도 자꾸 잃어버리고 관리자 잘 안되서 github에 올려봅니다;
 필요하신 분들은 편히 사용하시고(정작 사용방법은 편하지 않지만), 관련 문의는 아래 메일로 부탁드려요~*
 
-덧2) 비슷한 기능을 하는 mybatis generator(http://mybatis.github.io/generator/configreference/xmlconfig.html) 라는 툴도 있습니다~ mybro와 비슷하지만 더 강력하고 세밀한 설정이 가능해 보이구요~
+덧2) 비슷한 기능을 하는 mybatis generator(http://mybatis.github.io/generator/configreference/xmlconfig.html) 라는 툴도 있습니다~ mybro와 비슷하지만 더 강력하고 세밀한 설정이 가능해 보이구요~ 
 다만, 개인적으로 설정 부분이 조금 불편한 감은 있어요~
 
 
