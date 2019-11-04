@@ -25,6 +25,7 @@ import smallwheel.mybro.repository.DatabaseRepository;
 import smallwheel.mybro.service.DatabaseService;
 import smallwheel.mybro.support.SqlMapperBuilderFactory;
 import smallwheel.mybro.support.builder.DtoClassBuilder;
+import smallwheel.mybro.support.builder.EnvBuilder;
 import smallwheel.mybro.support.builder.SqlMapperBuilder;
 
 
@@ -38,6 +39,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 	
 	@Autowired
 	private ApplicationContext applicationContext;
+	
+	@Autowired
+	private EnvBuilder envBuilder;
 	
 	@Autowired
 	private DtoClassBuilder dtoClassBuilder;
@@ -80,7 +84,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 		} else if (DBMS.MSSQL.equals(dbmsType)) {
 			return "select 1";
 		} else if (DBMS.ORACLE.equals(dbmsType)) {
-			return "select 1";
+			return "select 1 from dual";
 		} else {
 			return null;
 		}
@@ -163,6 +167,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 		beanDef.getPropertyValues().addPropertyValue("classNameSuffix", generatingInfo.getMappingOption().getClassNameSuffix());
 		
 		registerBeanDefinition("mappingOption-" + userId, beanDef);
+		
+		// 결과 파일 디렉토리 구성
+		envBuilder.init(userId);
 		
 		TableInfo tableInfo = new TableInfo();
 		ClassFileInfo classInfo = new ClassFileInfo();

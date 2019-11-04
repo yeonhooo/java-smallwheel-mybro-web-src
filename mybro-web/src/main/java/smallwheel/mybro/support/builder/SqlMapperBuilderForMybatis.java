@@ -1,6 +1,5 @@
 package smallwheel.mybro.support.builder;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -44,12 +43,6 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 	public void build(String userId, TableInfo table, ClassFileInfo classFile) {
 		
 		String sqlMapFilePath = Path.RESULT_DES_DIR + userId + Delimiter.VERTICAL_SLUSH + "mapper/sqlmap/";
-		File dir = new File(sqlMapFilePath);
-		if (!dir.isDirectory()) {
-			// 디렉토리가 존재하지 않는다면 디렉토리 생성
-			dir.mkdirs();
-		}
-		
 		MapperInterfaceInfo mapperInterfaceFile = new MapperInterfaceInfo();
 		
 		String tableName = table.getName();
@@ -204,7 +197,7 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 			LOGGER.error(e.getMessage(), e);
 		}
 		
-		buildMapperInterface(userId, classFile, mapperInterfaceFile);
+		buildMapperInterface(userId, entityName, classFile, mapperInterfaceFile);
 	}
 
 	/**
@@ -393,11 +386,12 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 	/**
 	 * java mapper interface을 생성한다.
 	 * 
+	 * @param entityName 
 	 * @param classFile
 	 * @param mapperInterfaceFile
 	 */
-	private void buildMapperInterface(String userId, ClassFileInfo classFile, MapperInterfaceInfo mapperInterfaceFile) {
-		String interfaceName = makeInterfaceName(classFile.getName());
+	private void buildMapperInterface(String userId, String entityName, ClassFileInfo classFile, MapperInterfaceInfo mapperInterfaceFile) {
+		String interfaceName = makeInterfaceName(entityName);
 
 		try (
 			// File Name 을 만든다.
@@ -427,9 +421,9 @@ public class SqlMapperBuilderForMybatis extends SqlMapperBuilder {
 		}
 	}
 	
-	/** 클래스명을 만든다. */
-	private String makeInterfaceName(String classFileName) {
-		return classFileName + Mapper.MAPPER_INTERFACE_SUFFIX;
+	/** 인터페이스명을 만든다. */
+	private String makeInterfaceName(String entityName) {
+		return entityName + Mapper.MAPPER_INTERFACE_SUFFIX;
 	}
 	
 	/** 파라미터명을 만든다. */

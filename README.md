@@ -1,7 +1,7 @@
-# mybro (console mode)
+# mybro (web mode)
 
-mybro-console는 mybatis 및 ibatis를 위한 코드 생성용 콘솔 프로그램입니다. <br />
-mybatis 및 ibatis를 사용하는 프로젝트 초기에 반드시 거쳐야하지만 귀찮은 작업들을 줄이기 위한 목적으로 작성되었으며, 데이터베이스 접속 정보 및 테이블명을 입력받아, 관련 된 코드들을 자동으로 생성합니다. 현재는 콘솔 프로그램으로 작성되어 있으며, 차후 GUI로도 개발할 예정입니다.
+mybro-console는 mybatis 및 ibatis를 위한 코드 생성용 프로그램입니다. <br />
+mybatis 및 ibatis를 사용하는 프로젝트 초기에 반드시 거쳐야하지만 귀찮은 작업들을 줄이기 위한 목적으로 작성되었으며, 데이터베이스 접속 정보 및 테이블명을 입력받아, 관련 된 코드들을 자동으로 생성합니다. 현재는 Web App 버젼으로 Console 버젼(https://github.com/yeonhooo/java-smallwheel-mybro-console-src) 도 존재합니다.
 
 자동으로 생성되는 코드 목록:
  1. domain class file
@@ -27,6 +27,9 @@ mybatis 및 ibatis를 사용하는 프로젝트 초기에 반드시 거쳐야하
  3. java mapper interface 
      * mybatis 전용 파일. myabtis에서 Mapper interface를 사용할 경우에 사용합니다.
        * (2)에서 생성된 sql mapper xml에 해당하는 java mapper interface를 생성합니다.
+
+ 4. 구동화면 
+ ![mybro-screenshot](https://raw.githubusercontent.com/yeonhooo/java-smallwheel-mybro-web-src/master/screenshot.PNG)
  
 <br />
 ------------------------
@@ -37,7 +40,6 @@ mybatis 및 ibatis를 사용하는 프로젝트 초기에 반드시 거쳐야하
 필요하신 분들은 편히 사용하시고(정작 사용방법은 편하지 않지만), 관련 문의는 아래 메일로 부탁드려요~*
 
 덧2) 비슷한 기능을 하는 mybatis generator(http://mybatis.github.io/generator/configreference/xmlconfig.html) 라는 툴도 있습니다~ mybro와 비슷하지만 더 강력하고 세밀한 설정이 가능해 보이구요~
-다만, 개인적으로 설정 부분이 조금 어려운 감은 있어요~
-
+다만, 개인적으로 설정 부분이 조금 불편한 감은 있어요~
 
 관련 문의: yeonhooo@gmail.com
